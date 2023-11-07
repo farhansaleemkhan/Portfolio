@@ -4,7 +4,7 @@ const ProfileUpdate = () => {
   const [errors, setErrors] = useState({});
   const formInput = [
     {
-      inputID: "full_name",
+      inputID: "name",
       inputName: "Full Name",
       inputType: "text",
       inputPlaceholder: "Enter Full Name",
@@ -18,7 +18,7 @@ const ProfileUpdate = () => {
       inputPattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
     },
     {
-      inputID: "phone",
+      inputID: "phoneNumber",
       inputName: "Phone Number",
       inputType: "number",
       inputPlaceholder: "+92-3456789012",
@@ -50,18 +50,27 @@ const ProfileUpdate = () => {
   ];
 
   const [formData, setFormData] = useState({
-    full_name: "",
+    name: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     image: "",
     skills: "",
+    address: "",
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === "skills") {
+      const skills = value.split(',');
+      setFormData({
+        ...formData,
+        [name]: skills,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const validateForm = () => {
@@ -76,8 +85,8 @@ const ProfileUpdate = () => {
     //   }
     // });
 
-    if (!formData.full_name) {
-      newError.full_name="Full Name is required";
+    if (!formData.name) {
+      newError.name="Full Name is required";
     }
     if (!formData.email) {
       newError.email="Email is required";
@@ -91,16 +100,29 @@ const ProfileUpdate = () => {
     if (!formData.skills) {
       newError.skills="Skills are required";
     }
+    if (!formData.address) {
+      newError.address="Address is required";
+    }
 
     setErrors(newError);
     return newError;
   };
 
   const handleSubmit = (e) => {
+
+    console.log(formData);
+
     e.preventDefault();
     validateForm();
     if (Object.keys(errors).length === 0) {
-      
+      setFormData({
+        name: "",
+        email: "",
+        phoneNumber: "",
+        image: "",
+        skills: "",
+        address: "",
+      });
     }
   };
 
@@ -126,7 +148,6 @@ const ProfileUpdate = () => {
                   type={data.inputType}
                   id={data.inputID}
                   name={data.inputID}
-                  inputmode={data.inputMode}
                   className={`bg-gray-50 appearance-none border mt-5 outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
                     errors[data.inputID] ? "border-red-500" : ""
                   }`}

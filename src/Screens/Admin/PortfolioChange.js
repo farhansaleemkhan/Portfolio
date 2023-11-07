@@ -60,10 +60,18 @@ const PortfolioChange = () => {
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === "language") {
+      const languages = value.split(',');
+      setFormData({
+        ...formData,
+        [name]: languages,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const validateForm = () => {
@@ -83,10 +91,11 @@ const PortfolioChange = () => {
   };
 
   const handleSubmit = (e) => {
-    // formData.language.split(',')
     console.log("=======formData===", formData);
+
     e.preventDefault();
     validateForm();
+    
     if (Object.keys(errors).length === 0) {
       setFormData({
         name: "",

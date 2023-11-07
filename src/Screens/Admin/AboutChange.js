@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+// import Axios from "axios";
 
 const AboutChange = () => {
   const [description, setDescription] = useState("");
@@ -28,6 +29,9 @@ const AboutChange = () => {
       
     }
   };
+
+  useEffect(() => {}, [])
+
 
   return (
     <div className="p-5 md:ml-64">
