@@ -27,6 +27,7 @@ const Footer = () => {
       }
     ]
   } 
+  
   return (
     <>
       <div className="bg-slate-700 py-20 text-center">

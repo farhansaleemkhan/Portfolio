@@ -1,7 +1,19 @@
+import axios from "axios";
 import React, { useState } from "react";
+import SuccessAlert from "../../Components/SuccessAlert";
+import ErrorAlert from "../../Components/ErrorAlert";
 
 const Contact = () => {
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  
+  const closeSuccessMessage = () => {
+    setSuccessMessage("");
+  }
+  const closeErrorMessage = () => {
+    setErrorMessage("");
+  }
   const formInput = [
     {
       inputID: "name",
@@ -21,9 +33,9 @@ const Contact = () => {
       inputID: "phoneNumber",
       inputName: "Phone Number",
       inputType: "number",
-      inputPlaceholder: "+92-3456789012",
-      inputPattern: "^[0-9+]{3}+-[0-9]{10}$",
-      inputMode: "none",
+      inputPlaceholder: "03456789012",
+      inputPattern: "^03\d{9}$",
+      // inputPattern: "^[0-9+]{6}+-[0-9]{7}$",
     },
     {
       inputID: "message",
@@ -44,6 +56,9 @@ const Contact = () => {
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
     if (name === "message") {
       const skills = value.split(",");
       setFormData({
@@ -80,7 +95,7 @@ const Contact = () => {
       newError.phoneNumber = "Phone Number is required";
     }
     if (!formData.message) {
-      newError.address = "Message is required";
+      newError.message = "Message is required";
     }
 
     setErrors(newError);
@@ -91,14 +106,37 @@ const Contact = () => {
     console.log(formData);
 
     e.preventDefault();
-    validateForm();
-    if (Object.keys(errors).length === 0) {
+    const formError = validateForm();
+
+    if (Object.keys(formError).length === 0) { 
+      const dataToSend = {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        message: formData.message,
+      }
+
+      //Backend part
+      axios
+      .post("", dataToSend)
+      .then((messageSend) => {
+        console.log("Message Send Successfully", messageSend)
+        setSuccessMessage("Congrulation! Your message has been send successfully");
+      })
+      .catch((error) => {
+        console.log("Error occur", error)
+        setErrorMessage("Oops! Something went wrong");
+      });
+
       setFormData({
         name: "",
         email: "",
         phoneNumber: "",
         message: "",
       });
+    }
+    else{
+      setErrorMessage("Please Complete all the fields");
     }
   };
 
@@ -122,12 +160,27 @@ const Contact = () => {
                 <label
                   key={index}
                   htmlFor={data.inputType}
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm text-left font-medium text-gray-900 dark:text-white"
                 >
                   {data.inputName}
                 </label>
+                {data.inputID === "message" ? 
+                <textarea
+                className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-5 ${errors[data.inputID] ? "border-red-500" : ""
+              }`}
+                rows={data.inputRow}
+                cols={data.inputColumn}
+                type={data.inputType}
+                id={data.inputID}
+                name={data.inputID}
+                placeholder={data.inputPlaceholder}
+                pattern={data.inputPattern}
+                value={formData[data.inputID]}
+                onChange={handleInputChange}
+              />
+                :
                 <input
-                  className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-5 errors[data.inputID] ? "border-red-500" : ""
+                  className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-5 ${errors[data.inputID] ? "border-red-500" : ""
             }`}
                   type={data.inputType}
                   id={data.inputID}
@@ -137,23 +190,15 @@ const Contact = () => {
                   value={formData[data.inputID]}
                   onChange={handleInputChange}
                 />
+                }
                 {errors[data.inputID] && (
-                  <p className="text-red-500 text-sm">{errors[data.inputID]}</p>
+                  <p className="text-red-500 pb-5 text-sm">{errors[data.inputID]}</p>
                 )}
               </>
             ))}
           </div>
-
-          {/* <textarea
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-5"
-              rows="5"
-              cols="5"
-              type="text"
-              id="message"
-              placeholder="Write Message"
-              required
-            /> */}
-          {/* </div> */}
+          {successMessage && <SuccessAlert message={successMessage} closeSuccessMessage={closeSuccessMessage} />}
+          {errorMessage && <ErrorAlert message={errorMessage} closeErrorMessage={closeErrorMessage} />}
           <button className="text-white bg-cyan-500 hover:bg-cyan-700 text-xl p-3 rounded-lg">
             Send
           </button>

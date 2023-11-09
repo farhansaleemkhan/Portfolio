@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "../../Components/Table";
+import axios from "axios";
 
 const Inbox = () => {
+  // const [messageList, setMessageList] = useState([]); 
 
   const Title = [
     {
@@ -69,6 +71,25 @@ const Inbox = () => {
       component: ModalConfig,
     },
   ];
+
+  //Backend code
+  // const fetchData = () => {
+  //   axios
+  //     .get("http://localhost:3000/contacts")
+  //     .then((response) => {
+  //       const recieveData = response.data.map((item) => ({
+  //         senderName: item.name,
+  //         senderEmail: item.email,
+  //         senderPhoneNo: item.phoneNumber,
+  //         senderMessage: item.message,
+  //       }));
+  //       setMessageList(recieveData);
+  //     })
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   return (
     <div className="p-5 md:ml-64">

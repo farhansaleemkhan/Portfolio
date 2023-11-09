@@ -1,7 +1,20 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import SuccessAlert from '../../Components/SuccessAlert';
+import ErrorAlert from '../../Components/ErrorAlert';
 
 const Social = () => {
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  
+  const closeSuccessMessage = () => {
+    setSuccessMessage("");
+  }
+  const closeErrorMessage = () => {
+    setErrorMessage("");
+  }
+
   const formInput = [
     {
       inputID: "title",
@@ -23,8 +36,7 @@ const Social = () => {
       inputName: "Icon Class",
       inputType: "text",
       inputPlaceholder: "Write icon class e.g. fa fa-instagram",
-      inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
-      // inputPattern: /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+      inputPattern: /^\S+\ +\S+$/,
     },
   ];
 
@@ -36,6 +48,9 @@ const Social = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
     setFormData({
       ...formData,
       [name]: value,
@@ -65,8 +80,37 @@ const Social = () => {
     e.preventDefault();
     validateForm();
     if (Object.keys(errors).length === 0) {
-      // setFormData("");
 
+      const dataToSend = {
+        title: formData.title,
+        link: formData.link,
+        iconLink: formData.iconLink,
+      }
+
+      console.log("Data to send: ",dataToSend);
+
+      //Backend part
+      axios
+      .post("", dataToSend)
+      .then((updateSocial) => {
+        setSuccessMessage(
+          "Congrulation! Your data has been updated successfully"
+        );
+        console.log("Social Fields are updated", updateSocial)
+      })
+      .catch((error) => {
+        console.log("Error occur", error)
+        setErrorMessage("Oops! Something went wrong");
+      });
+
+      setFormData({
+        title: "",
+        link: "",
+        iconLink: "",
+      });
+    }
+    else{
+      setErrorMessage("Please complete all fields");
     }
   };
 
@@ -108,6 +152,8 @@ const Social = () => {
             ))}
           </div>
         </div>
+        {successMessage && <SuccessAlert message={successMessage} closeSuccessMessage={closeSuccessMessage} />}
+        {errorMessage && <ErrorAlert message={errorMessage} closeErrorMessage={closeErrorMessage} />}
         <button
           type="submit"
           className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
