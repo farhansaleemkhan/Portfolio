@@ -66,7 +66,9 @@ const Portfolio = () => {
   //   axios
   //     .get("http://localhost:3000/projects")
   //     .then((response) => {
-  //       const recieveData = response.data.map((item) => ({
+  //       const userData = response.data;
+  //       const projectData = userData.projects;
+  //       const recieveData = projectData.map((item) => ({
   //         projectName: item.name,
   //         projectImage: item.image,
   //         projectDescription: item.description,
@@ -106,7 +108,7 @@ const Portfolio = () => {
                   alt={data.projectName}
                 />
               </div>
-              <div className="bg-slate-700 text-white py-5">
+              <div className="bg-slate-700 pl-1 rounded text-white py-5">
                 <p className="font-semibold">Project Name: {data.projectName}</p>
                 <p className="">Project Description: {data.projectDescription}</p>
                 <p className="">Start Date: {data.projectStartDate}</p>

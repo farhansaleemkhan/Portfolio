@@ -11,6 +11,7 @@ const Profile = () => {
     profileEmail: "portfolio@gmail.com",
     profilePhoneNo: "03333333111",
     profileSkills: ["Graphic Artist", "Web Designer", "Illustrator"],
+    profileAddress: "Lahore Pakistan"
   };
 
   // For Backend
@@ -19,14 +20,15 @@ const Profile = () => {
   //     .get("http://localhost:3000/users")
   //     .then((response) => {
   //       console.log("Data", response.data)
-  //       const recieveData = response.data.map((item) => ({
-  //         profileImage: item.image,
-  //         profileName: item.name,
-  //         profileEmail: item.email,
-  //         profilePhoneNo: item.phoneNumber,
-  //         profileSkills: item.skills,
-  //         profileAddress: item.address,
-  //       }));
+  //       const userData = response.data;
+  //       const recieveData = {
+  //         profileImage: userData.image,
+  //         profileName: userData.name,
+  //         profileEmail: userData.email,
+  //         profilePhoneNo: userData.phoneNumber,
+  //         profileSkills: userData.skills,
+  //         profileAddress: userData.address,
+  //       };
   //       setProfileItem(recieveData);
   //     })
   //     .catch((error) => console.error("Error fetching data:", error));
@@ -60,7 +62,7 @@ const Profile = () => {
           {profileItem.profilePhoneNo}
         </p>
         <div className="flex">
-          {profileItem.profileSkills.map((skill, index) => (
+          {profileItem.profileSkills && profileItem.profileSkills.map((skill, index) => (
             <p key={index} className="text-white text-3xl">
               {skill} 
               {/* -&nbsp; */}
@@ -68,6 +70,9 @@ const Profile = () => {
             </p>
           ))}
         </div>
+        <p className="text-white font-bold text-2xl">
+          {profileItem.profileAddress}
+        </p>
       </div>
     </div>
   );

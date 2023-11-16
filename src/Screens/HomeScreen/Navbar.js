@@ -8,6 +8,10 @@ const Navbar = () => {
       path: '#portfolio'
     }, 
     {
+      title: 'Skills',
+      path: '#skill'
+    }, 
+    {
       title: 'About',
       path: '#about'
     }, 

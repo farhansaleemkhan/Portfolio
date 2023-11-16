@@ -32,7 +32,15 @@ const SideBar = () => {
                 to={"/admin/portfolioChange"}
                 className="flex items-center p-2 text-white hover:text-gray-900 rounded-lg dark:text-white hover:bg-cyan-500 dark:hover:bg-gray-700 group"
               >
-                <span className="flex-1 ml-3 whitespace-nowrap">Portfolio</span>
+                <span className="flex-1 ml-3 whitespace-nowrap">Project</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={"/admin/skillsChange"}
+                className="flex items-center p-2 text-white hover:text-gray-900 rounded-lg dark:text-white hover:bg-cyan-500 dark:hover:bg-gray-700 group"
+              >
+                <span className="flex-1 ml-3 whitespace-nowrap">Skills</span>
               </Link>
             </li>
             <li>

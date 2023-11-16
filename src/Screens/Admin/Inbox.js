@@ -72,7 +72,7 @@ const Inbox = () => {
     },
   ];
 
-  //Backend code
+  //Get data from Backend code
   // const fetchData = () => {
   //   axios
   //     .get("http://localhost:3000/contacts")
@@ -90,6 +90,7 @@ const Inbox = () => {
   // useEffect(() => {
   //   fetchData();
   // }, []);
+
 
   return (
     <div className="p-5 md:ml-64">

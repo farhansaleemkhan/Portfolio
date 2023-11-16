@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SuccessAlert from "../../Components/SuccessAlert";
 import ErrorAlert from "../../Components/ErrorAlert";
 
@@ -7,7 +7,9 @@ const ProfileUpdate = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [profileData, setProfileData] = useState(null);
+  const [editProfile, setEditProfile] = useState(null);
+  const [profileItem, setProfileItem] = useState({});
+  const [isUpdateProfile, setIsUpdateProfile] = useState(false);
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -15,6 +17,16 @@ const ProfileUpdate = () => {
   const closeErrorMessage = () => {
     setErrorMessage("");
   };
+
+  // const profileItem = {
+  //   profileImage:
+  //     "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
+  //   profileName: "Start Portfolio App",
+  //   profileEmail: "portfolio@gmail.com",
+  //   profilePhoneNo: "03333333111",
+  //   profileSkills: ["Graphic Artist", "Web Designer", "Illustrator"],
+  //   profileAddress: "Lahore Pakistan",
+  // };
 
   const formInput = [
     {
@@ -36,7 +48,7 @@ const ProfileUpdate = () => {
       inputName: "Phone Number",
       inputType: "number",
       inputPlaceholder: "03456789012",
-      inputPattern: "^03\d{9}$",
+      inputPattern: "^03d{9}$",
     },
     {
       inputID: "image",
@@ -141,19 +153,36 @@ const ProfileUpdate = () => {
 
       console.log("Data to send: ", dataToSend);
 
-      //Backend part
-      axios
-        .post("", dataToSend)
+      if(editProfile){
+        //For Updating data
+        axios
+        .put(`/api/profiles/${editProfile.id}`, dataToSend)
         .then((updateProfile) => {
           setSuccessMessage(
-            "Congrulation! Your profile has been updated successfully"
+            "Congratulations! Your profile has been updated successfully"
           );
           console.log("Profile is updated", updateProfile);
         })
         .catch((error) => {
           setErrorMessage("Oops! Something went wrong");
-          console.log("Error occur", error);
+          console.log("Error occurred", error);
         });
+      }
+      else{
+        //For Creating new Backend part
+        axios
+          .post("", dataToSend)
+          .then((updateProfile) => {
+            setSuccessMessage(
+              "Congrulation! Your profile has been updated successfully"
+            );
+            console.log("Profile is updated", updateProfile);
+          })
+          .catch((error) => {
+            setErrorMessage("Oops! Something went wrong");
+            console.log("Error occur", error);
+          });
+      }
 
       setFormData({
         name: "",
@@ -163,9 +192,47 @@ const ProfileUpdate = () => {
         skills: "",
         address: "",
       });
+
+      setEditProfile(null);
     } else {
       setErrorMessage("Please complete all the fields");
     }
+  };
+
+  // For getting data from Backend
+  // const fetchData = () => {
+  //   axios
+  //     .get("http://localhost:3000/users")
+  //     .then((response) => {
+  //       console.log("Data", response.data)
+  //       const userData = response.data;
+  //       const recieveData = {
+  //         profileImage: userData.image,
+  //         profileName: userData.name,
+  //         profileEmail: userData.email,
+  //         profilePhoneNo: userData.phoneNumber,
+  //         profileSkills: userData.skills,
+  //         profileAddress: userData.address,
+  //       };
+  //       setProfileItem(recieveData);
+  //     })
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  const handleEditClick = (profile) => {
+    setEditProfile(profile);
+    setFormData({
+      image: profile.profileImage,
+      name: profile.profileName,
+      email: profile.profileEmail,
+      phoneNumber: profile.profilePhoneNo,
+      skills: profile.profileSkills ? profile.profileSkills.join(",") : "",
+      address: profile.profileAddress,
+    });
+    setIsUpdateProfile(true);
   };
 
   return (
@@ -174,16 +241,59 @@ const ProfileUpdate = () => {
         Profile
       </h1>
 
-      {profileData ? (
-        <></>
-      ) : (
-        <form className="py-10" onSubmit={handleSubmit}>
+      {(!isUpdateProfile && Object.keys(profileItem).length !== 0 ) && (
+        <>
+          <div className="bg-cyan-500 items-center py-24 flex flex-col">
+            <img
+              src={profileItem.profileImage}
+              alt={profileItem.profileName}
+              className="h-72 w-96"
+            />
+            <p className="text-white text-2xl py-5 font-black">
+              <i className="fa-solid fa-minus"></i>
+              <i className="fa-solid fa-minus"></i>
+              <i className="fa-solid fa-star"></i>
+              <i className="fa-solid fa-minus"></i>
+              <i className="fa-solid fa-minus"></i>
+            </p>
+            <p className="text-white text-5xl font-bold py-10 uppercase">
+              {profileItem.profileName}
+            </p>
+            <p className="text-white font-bold text-2xl pb-5 lowercase">
+              {profileItem.profileEmail}
+            </p>
+            <p className="text-white font-bold text-2xl lowercase">
+              {profileItem.profilePhoneNo}
+            </p>
+            <div className="flex">
+              {profileItem.profileSkills &&
+                profileItem.profileSkills.map((skill, index) => (
+                  <p key={index} className="text-white text-3xl">
+                    {skill}
+                    {/* -&nbsp; */}
+                    {index < profileItem.profileSkills.length - 1 && " - "}
+                  </p>
+                ))}
+            </div>
+            <p className="text-white font-bold text-2xl">
+              {profileItem.profileAddress}
+            </p>
+          </div>
+          <button
+            className="text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={() => handleEditClick(profileItem)}
+          >
+            Edit <i className="fa-solid fa-pencil" />
+          </button>
+        </>
+      )} 
+      {(Object.keys(profileItem).length === 0 || isUpdateProfile) && (
+        <form className="py-10 border border-black" onSubmit={handleSubmit}>
           <div className="grid gap-6 m-6 md:grid-cols-2">
             <div>
               {formInput.map((data, index) => (
-                <div className="text-left mb-5">
+                <div className="text-left mb-5" key={index}>
                   <label
-                    key={index}
                     htmlFor={data.inputType}
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
@@ -224,7 +334,7 @@ const ProfileUpdate = () => {
           )}
           <button
             type="submit"
-            className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white text-left bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Save
           </button>

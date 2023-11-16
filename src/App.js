@@ -4,6 +4,7 @@ import HomeScreen from './Screens/HomeScreen';
 import AdminScreen from './Screens/Admin';
 import ProfileUpdate from './Screens/Admin/ProfileUpdate';
 import PortfolioChange from './Screens/Admin/PortfolioChange';
+import SkillsChange from './Screens/Admin/SkillsChange'
 import AboutChange from './Screens/Admin/AboutChange';
 import Inbox from './Screens/Admin/Inbox';
 import Social from './Screens/Admin/Social';
@@ -17,6 +18,7 @@ function App() {
         <Route path='/admin' element={<AdminScreen />}>
           <Route path='/admin/profileUpdate' element={<ProfileUpdate />} />
           <Route path='/admin/portfolioChange' element={<PortfolioChange />} />
+          <Route path='/admin/skillsChange' element={<SkillsChange />} />
           <Route path='/admin/aboutChange' element={<AboutChange />} />
           <Route path='/admin/inbox' element={<Inbox />} />
           <Route path='/admin/socialChange' element={<Social />} />

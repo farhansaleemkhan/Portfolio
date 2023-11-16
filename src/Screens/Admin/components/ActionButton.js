@@ -21,6 +21,7 @@ const ActionButton = ({item}) => {
             closeModal={closeModal}
             Element={item.component}
             elementProp={item.params}
+            id={item.id}
         />
         )}
     </>
