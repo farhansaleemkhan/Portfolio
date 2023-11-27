@@ -8,7 +8,7 @@ import { faColonSign } from "@fortawesome/free-solid-svg-icons";
 const SkillsChange = () => {
   const [skillName, setSkillName] = useState("");
   const [skillRating, setSkillRating] = useState(0);
-  const userId = "";
+  const userId = "65647756b1e006a5838a1952";
   const [skillId, setSkillId] = useState("");
   const [skillData_id, setSkillData_id] = useState("");
   const [errors, setErrors] = useState({});
@@ -18,7 +18,7 @@ const SkillsChange = () => {
   const [isNewSkill, setIsNewSkill] = useState(false);
   const [isUpdateSkill, setIsUpdateSkill] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  // const [userSkills , setUserSkills] = useState([])
+  const [userSkills, setUserSkills] = useState([]);
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -26,11 +26,6 @@ const SkillsChange = () => {
   const closeErrorMessage = () => {
     setErrorMessage("");
   };
-
-  const userSkills = [
-    { name: "React", rating: "3" },
-    { name: "Node", rating: "2" },
-  ];
 
   const handleRatingChange = (rating) => {
     setSkillRating(rating);
@@ -50,32 +45,33 @@ const SkillsChange = () => {
   };
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
     const formError = validateForm();
 
     if (Object.keys(formError).length === 0) {
       if (isNewSkill && editSkillIndex !== null) {
-        // const dataToEdit = {
-        //   skills: {
-        //   name: skillName,
-        //   rating: skillRating,
-        //   skillId: skillId,
-        // },
-        // }
-        // console.log("Data to send: ",dataToEdit);
-        // axios
-        //   .put(`http://localhost:3000/skill/${skillData_id}`,dataToSend)
-        //   .then((response) => {
-        //     setSuccessMessage("Congratulations! Your skill has been updated successfully");
-        //     console.log("Project is updated", response.data);
-        //setSkillId("");
-        setEditSkillIndex(null);
-        //   })
-        //   .catch((error) => {
-        //     setErrorMessage("Oops! Something went wrong");
-        //     console.log("Error occurred", error);
-        //   });
+        const dataToEdit = {
+          skills: {
+            name: skillName,
+            rating: skillRating,
+            skillId: skillId,
+          },
+        };
+        console.log("Data to send: ", dataToEdit);
+        axios
+          .put(`http://localhost:3000/skill/${skillData_id}`, dataToEdit)
+          .then((response) => {
+            setSuccessMessage(
+              "Congratulations! Your skill has been updated successfully"
+            );
+            console.log("Project is updated", response.data);
+            setSkillId("");
+            setEditSkillIndex(null);
+          })
+          .catch((error) => {
+            setErrorMessage("Oops! Something went wrong");
+            console.log("Error occurred", error);
+          });
       } else {
         // postData / add in backend
         const dataToSend = {
@@ -87,13 +83,13 @@ const SkillsChange = () => {
         };
         console.log("Data to send: ", dataToSend);
         axios
-          .post("", dataToSend)
+          .post("http://localhost:3000/skill/new", dataToSend)
           .then((createSkill) => {
             setSuccessMessage(
               "Congrulation! Your data has been saved successfully"
             );
             console.log("Skill is Added : ", createSkill);
-            
+
             setSkillName("");
             setSkillRating(0);
           })
@@ -107,29 +103,33 @@ const SkillsChange = () => {
     }
   };
 
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/skill/get/655757f4133318ba786bd14d")
-  //     .then((response) => {
-  //       const userData = response.data;
-  //       const skillData = userData.skill;
-  //       const id = skillData._id;
-  //       setSkillData_id(id);
-  //       console.log("Skill Object ID: ",skillData_id);
-  //       const skills = skillData.skills;
-  //       const recieveData = skills.map((item) => ({
-  //         name: item.name,
-  //         rating: item.rating,
-  //         skillId: item._id,
-  //       }));
-  //       console.log("Recieve Data ==", recieveData);
-  //       setUserSkills(recieveData);
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  //Get Data from Backend
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/skill/get/65647756b1e006a5838a1952")
+      .then((response) => {
+        // console.log("Data", response.data);
+        const userData = response.data;
+        const skillData = userData.skill;
+
+        const id = skillData._id;
+        setSkillData_id(id);
+
+        const skills = skillData.skills;
+        // console.log("Skill Data Array ==", skills);
+        const recieveData = skills.map((item) => ({
+          name: item.name,
+          rating: item.rating,
+          skillId: item._id,
+        }));
+        console.log("Recieve Data ==", recieveData);
+        setUserSkills(recieveData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   //Edit skill
   const handleEditClick = (index) => {
@@ -151,22 +151,28 @@ const SkillsChange = () => {
   //Delete Skill from list
   const handleDeleteClick = (index) => {
     const skillToDelete = userSkills[index];
-    console.log("Skill delete ==", skillToDelete);
+    // console.log("Skill delete ==", skillToDelete);
     const deleteSkillId = skillToDelete.skillId;
-    console.log('delete skill id ===',deleteSkillId);
+    // console.log("delete skill id ===", deleteSkillId);
+    // console.log("skill data id ===", skillData_id);
     const dataToDelete = {
-      skillId : deleteSkillId,
-    }
+      skillId: deleteSkillId,
+    };
+    // console.log("Data to Delete", dataToDelete);
     axios
-    .delete(`http://localhost:3000/project/${skillData_id}`,{data: dataToDelete})
-    .then((response) => {
-      setSuccessMessage("Congratulations! Selected skill has been deleted successfully");
-      console.log("Skill is deleted", response.data);
-    })
-    .catch((error) => {
-      setErrorMessage("Oops! Something went wrong");
-      console.log("Error occurred", error);
-    });
+      .delete(`http://localhost:3000/skill/${skillData_id}`, {
+        data: dataToDelete,
+      })
+      .then((response) => {
+        setSuccessMessage(
+          "Congratulations! Selected skill has been deleted successfully"
+        );
+        console.log("Skill is deleted", response.data);
+      })
+      .catch((error) => {
+        setErrorMessage("Oops! Something went wrong");
+        console.log("Error occurred", error);
+      });
   };
 
   return (

@@ -10,6 +10,7 @@ const ProfileUpdate = () => {
   const [editProfile, setEditProfile] = useState(null);
   const [profileItem, setProfileItem] = useState({});
   const [isUpdateProfile, setIsUpdateProfile] = useState(false);
+  const [userId, setUserId] = useState("");
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -18,15 +19,6 @@ const ProfileUpdate = () => {
     setErrorMessage("");
   };
 
-  // const profileItem = {
-  //   profileImage:
-  //     "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
-  //   profileName: "Start Portfolio App",
-  //   profileEmail: "portfolio@gmail.com",
-  //   profilePhoneNo: "03333333111",
-  //   profileSkills: ["Graphic Artist", "Web Designer", "Illustrator"],
-  //   profileAddress: "Lahore Pakistan",
-  // };
 
   const formInput = [
     {
@@ -59,13 +51,6 @@ const ProfileUpdate = () => {
       // inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
       inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
     },
-    // {
-    //   inputID: "skills",
-    //   inputName: "Skills",
-    //   inputType: "text",
-    //   inputPlaceholder: "Enter your skills",
-    //   inputPattern: "^[a-zA-Z0-9._%+-]+$",
-    // },
     {
       inputID: "address",
       inputName: "Address",
@@ -141,9 +126,9 @@ const ProfileUpdate = () => {
           address: formData.address,
         };
 
-        console.log("Data to send: ", dataToUpdate);
+        console.log("Data to Update: ", dataToUpdate);
         axios
-          .put(`/api/profile/${editProfile.id}`, dataToUpdate)
+          .put("http://localhost:3000/user/65647756b1e006a5838a1952", dataToUpdate)
           .then((updateProfile) => {
             setSuccessMessage(
               "Congratulations! Your profile has been updated successfully"
@@ -195,7 +180,7 @@ const ProfileUpdate = () => {
   // For getting data from Backend
   const fetchData = () => {
     axios
-      .get("http://localhost:3000/user/")
+      .get("http://localhost:3000/user/65647756b1e006a5838a1952")
       .then((response) => {
         console.log("Data", response.data)
         const userData = response.data;
@@ -205,7 +190,9 @@ const ProfileUpdate = () => {
           profileEmail: userData.email,
           profilePhoneNo: userData.phoneNumber,
           profileAddress: userData.address,
+          userId: userData._id,
         };
+        console.log("Recieve Data ==",recieveData);
         setProfileItem(recieveData);
       })
       .catch((error) => console.error("Error fetching data:", error));
@@ -216,6 +203,7 @@ const ProfileUpdate = () => {
 
   const handleEditClick = (profile) => {
     setEditProfile(profile);
+    console.log("Edit profile ==", profile);
     setFormData({
       image: profile.profileImage,
       name: profile.profileName,
@@ -224,12 +212,13 @@ const ProfileUpdate = () => {
       // skills: profile.profileSkills ? profile.profileSkills.join(",") : "",
       address: profile.profileAddress,
     });
+    setUserId(profile.userId);
     setIsUpdateProfile(true);
   };
 
   return (
     <div className="text-center p-5 md:ml-64">
-      <h1 className="text-5xl py-10 font-bold bg-cyan-500 text-white uppercase">
+      <h1 className="text-5xl py-10 font-bold bg-slate-700 text-white uppercase">
         Profile
       </h1>
 

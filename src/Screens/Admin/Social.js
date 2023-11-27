@@ -12,34 +12,14 @@ const Social = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [editSocialIndex, setEditSocialIndex] = useState(null);
   const [isUpdateSocial, setIsUpdateSocial] = useState(false);
+  const userId = "65647756b1e006a5838a1952";
+
   const closeSuccessMessage = () => {
     setSuccessMessage("");
   };
   const closeErrorMessage = () => {
     setErrorMessage("");
   };
-  // const iconLinks = [
-  //   {
-  //     title: "Facebook",
-  //     link: "",
-  //     iconPath: "fa-brands fa-facebook-f",
-  //   },
-  //   {
-  //     title: "Twitter",
-  //     link: "",
-  //     iconPath: "fa-brands fa-twitter",
-  //   },
-  //   {
-  //     title: "Linkedin",
-  //     link: "",
-  //     iconPath: "fa-brands fa-linkedin",
-  //   },
-  //   {
-  //     title: "Browser",
-  //     link: "",
-  //     iconPath: "fa fa-globe",
-  //   },
-  // ];
   const formInput = [
     {
       inputID: "title",
@@ -63,20 +43,12 @@ const Social = () => {
       inputPlaceholder: "Write icon class e.g. fa fa-instagram",
       inputPattern: /^\S+\ +\S+$/,
     },
-    {
-      inputID: "userId",
-      inputName: "User ID",
-      inputType: "text",
-      inputPlaceholder: "Enter User ID",
-      inputPattern: "^[a-zA-Z0-9._%+-]+$",
-    },
   ];
   const [formData, setFormData] = useState({
     title: "",
     link: "",
     iconLink: "",
-    userId: "",
-  });
+    });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
@@ -87,14 +59,27 @@ const Social = () => {
   };
   const validateForm = () => {
     const newError = {};
-    formInput.forEach((input) => {
-      if (!formData[input.inputID]) {
-        newError[input.inputID] = `${input.inputName} is required`;
-      }
+    // formInput.forEach((input) => {
+
+      // if (!formData[input.inputID]) {
+      //   newError[input.inputID] = `${input.inputName} is required`;
+      // }
       // else if (input.inputPattern && !input.inputPattern.test(formData[input.inputID])) {
       //   newError[input.inputID] = `Invalid ${input.inputName}`;
       // }
-    });
+
+      // });
+
+      if (!formData.title) {
+        newError.name = "Social App Title is required";
+      }
+      if (!formData.link) {
+        newError.name = "Account URL is required";
+      }
+      if (!formData.iconLink) {
+        newError.name = "Social Class Name is required";
+      }
+
     setErrors(newError);
     return newError;
   };
@@ -107,16 +92,16 @@ const Social = () => {
         title: formData.title,
         link: formData.link,
         iconLink: formData.iconLink,
-        userId: formData.userId,
+        userId: userId,
       };
       console.log("Data to send: ", dataToSend);
       if (isNewSocial && editSocialIndex !== null) {
         console.log("User ID :", formData.userId);
         axios
-          .put(`http://localhost:3000/social/${formData.userId}`, formData)
-          .then((response) => {
-            setSuccessMessage(
-              "Congratulations! Your social information has been updated successfully"
+        .put(`http://localhost:3000/social/${formData.userId}`, formData)
+        .then((response) => {
+          setSuccessMessage(
+            "Congratulations! Your social information has been updated successfully"
             );
             console.log("Socail is updated", response.data);
           })
@@ -124,9 +109,16 @@ const Social = () => {
             setErrorMessage("Oops! Something went wrong");
             console.log("Error occurred", error);
           });
-        setEditSocialIndex(null);
-      } else {
-        //Post data in backend
+          setEditSocialIndex(null);
+        } else {
+          //Post data in backend
+        const dataToSend = {
+          title: formData.title,
+          link: formData.link,
+          iconLink: formData.iconLink,
+          userId: userId,
+        };
+        console.log("Data to send: ", dataToSend);
         axios
           .post("http://localhost:3000/social/new", dataToSend)
           .then((updateSocial) => {
@@ -144,7 +136,6 @@ const Social = () => {
         title: "",
         link: "",
         iconLink: "",
-        userId: "",
       });
     } else {
       setErrorMessage("Please complete all fields");
@@ -153,7 +144,7 @@ const Social = () => {
   //To get Data from Backend
   const fetchData = () => {
     axios
-      .get("http://localhost:3000/social/get/6551eccc142be4f7b2fc6337")
+      .get("http://localhost:3000/social/get/65647756b1e006a5838a1952")
       .then((response) => {
         const userData = response.data;
         const socialData = userData.social;
@@ -192,13 +183,9 @@ const Social = () => {
     axios
       .delete(`http://localhost:3000/social/${deleteSocialId}`)
       .then((deleteSocial) => {
-        setSuccessMessage(
-          "Congrulation! Selected item has been deleted successfully"
-        );
         console.log("Social is deleted", deleteSocial);
       })
       .catch((error) => {
-        setErrorMessage("Oops! Something went wrong");
         console.log("Error occur", error);
       });
   };
@@ -276,14 +263,14 @@ const Social = () => {
       {isUpdateSocial && iconLinks.length !== 0 && (
         <div className="flex flex-row bg-slate-700 py-20 text-center">
           {iconLinks.map((item, index) => (
-            <div key={item.index}>
+            <div key={item.index} className="flex flex-col ml-10">
               <i
                 className={`${item.iconPath} cursor-pointer text-white mx-10 rounded-full border border-white p-5 flex justify-center items-center h-10 w-10 m-1 hover:bg-white hover:text-black`}
               >
                 {/* {item.link} */}
               </i>
               <button
-                className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="text-white bg-cyan-500 hover:bg-cyan-700 my-3 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 onClick={() => handleEditClick(index)}
               >
                 Edit <i className="fa-solid fa-pencil" />

@@ -4,7 +4,7 @@ import Form from "../../Components/Form";
 import axios from "axios";
 
 const PortfolioChange = () => {
-  // const [portfolioData, setPortfolioData] = useState([]);
+  const [portfolioData, setPortfolioData] = useState([]);
   const [isNewProject, setIsNewProject] = useState(false);
   const [isUpdateProject, setIsUpdateProject] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -12,6 +12,8 @@ const PortfolioChange = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [editProjectIndex, setEditProjectIndex] = useState(null);
+  const [projectId, setProjectId]= useState("");
+  const userId = "65647756b1e006a5838a1952";
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -19,36 +21,6 @@ const PortfolioChange = () => {
   const closeErrorMessage = () => {
     setErrorMessage("");
   };
-
-  const portfolioData = [
-    {
-      projectName: "Cabin",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Cake",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Circus",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-  ];
 
   const formInput = [
     {
@@ -63,8 +35,8 @@ const PortfolioChange = () => {
       inputName: "Project Image URL",
       inputType: "url",
       inputPlaceholder: "http://flowbite.com",
-      // inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
-      inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
+      inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
+      // inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
     },
     {
       inputID: "description",
@@ -91,13 +63,13 @@ const PortfolioChange = () => {
         "Enter technology / languages used for project e.g. react etc.",
       inputPattern: "^[a-zA-Z0-9._%+-]+$",
     },
-    {
-      inputID: "userId",
-      inputName: "User ID",
-      inputType: "text",
-      inputPlaceholder: "Enter User ID",
-      inputPattern: "^[a-zA-Z0-9._%+-]+$",
-    },
+    // {
+    //   inputID: "userId",
+    //   inputName: "User ID",
+    //   inputType: "text",
+    //   inputPlaceholder: "Enter User ID",
+    //   inputPattern: "^[a-zA-Z0-9._%+-]+$",
+    // },
   ];
 
   const [formData, setFormData] = useState({
@@ -107,7 +79,7 @@ const PortfolioChange = () => {
     startDate: "",
     endDate: "",
     language: "",
-    userId: "",
+    // userId: "",
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -172,21 +144,22 @@ const PortfolioChange = () => {
     const formError = validateForm();
 
     if (Object.keys(formError).length === 0) {
-      const dataToSend = {
-        name: formData.name,
-        image: formData.image,
-        description: formData.description,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        language: formData.language,
-        userId: formData.userId,
-      };
       if (isNewProject && editProjectIndex !== null) {
+        const dataToEdit = {
+          name: formData.name,
+          image: formData.image,
+          description: formData.description,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          language: formData.language,
+          projectId: projectId,
+        };
+        console.log("Data to send==",dataToEdit)
         axios
-          .put(`http://localhost:3000/project/${formData.userId}`, formData)
-          .then((response) => {
-            setSuccessMessage(
-              "Congratulations! Your project has been updated successfully"
+        .put(`http://localhost:3000/project/${projectId}`, formData)
+        .then((response) => {
+          setSuccessMessage(
+            "Congratulations! Your project has been updated successfully"
             );
             console.log("Project is updated", response.data);
           })
@@ -194,8 +167,19 @@ const PortfolioChange = () => {
             setErrorMessage("Oops! Something went wrong");
             console.log("Error occurred", error);
           });
-        setEditProjectIndex(null);
-      } else {
+          setEditProjectIndex(null);
+          setProjectId("");
+        } else {
+        const dataToSend = {
+          name: formData.name,
+          image: formData.image,
+          description: formData.description,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          language: formData.language,
+          userId: userId,
+        };
+        console.log("Data to send==",dataToSend)
         axios
           .post("http://localhost:3000/project/new", dataToSend)
           .then((updateProfile) => {
@@ -216,7 +200,7 @@ const PortfolioChange = () => {
         startDate: "",
         endDate: "",
         language: "",
-        userId: "",
+        // userId: "",
       });
     } else {
       setErrorMessage("Please complete all input fields");
@@ -224,31 +208,32 @@ const PortfolioChange = () => {
   };
 
     // For Backend
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/project/get/")
-  //     .then((response) => {
-  //       const userData = response.data;
-  //       const projectData = userData.projects;
-  //       const recieveData = projectData.map((item) => ({
-  //         projectName: item.name,
-  //         projectImage: item.image,
-  //         projectDescription: item.description,
-  //         projectStartDate: item.startDate,
-  //         projectEndDate: item.endDate,
-  //         projectLanguage: item.language,
-  //         projectId: item._id,
-  //       }));
-  //       setPortfolioData(recieveData);
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/project/get/65647756b1e006a5838a1952")
+      .then((response) => {
+        const userData = response.data;
+        const projectData = userData.projects;
+        const recieveData = projectData.map((item) => ({
+          projectName: item.name,
+          projectImage: item.image,
+          projectDescription: item.description,
+          projectStartDate: item.startDate,
+          projectEndDate: item.endDate,
+          projectLanguage: item.language,
+          projectId: item._id,
+        }));
+        setPortfolioData(recieveData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleEditClick = (index) => {
     const projectToEdit = portfolioData[index];
+    console.log("Project to edit==",projectToEdit);
     setFormData({
       name: projectToEdit.projectName,
       image: projectToEdit.projectImage,
@@ -256,8 +241,10 @@ const PortfolioChange = () => {
       startDate: projectToEdit.projectStartDate,
       endDate: projectToEdit.projectEndDate,
       language: projectToEdit.projectLanguage,
-      userId: projectToEdit.projecId,
     });
+
+    const id = projectToEdit.projectId;
+    setProjectId(id);
 
     setIsNewProject(true);
     setIsUpdateProject(false);

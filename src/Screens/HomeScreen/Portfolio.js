@@ -3,87 +3,87 @@ import React, { useEffect, useState } from "react";
 import ImageBase64Converter from "../../Components/ImageBase64Converter";
 
 const Portfolio = () => {
-  // const [portfolioData, setPortfolioData] = useState([])
+  const [portfolioData, setPortfolioData] = useState([])
 
-  const portfolioData = [
-    {
-      projectName: "Cabin",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Cake",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Circus",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Game",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/game.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Safe",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/safe.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Submarine",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/submarine.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-  ];
+  // const portfolioData = [
+  //   {
+  //     projectName: "Cabin",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Cake",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Circus",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Game",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/game.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Safe",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/safe.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Submarine",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/submarine.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  // ];
 
   // For Backend
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/project/get/")
-  //     .then((response) => {
-  //       const userData = response.data;
-  //       const projectData = userData.projects;
-  //       const recieveData = projectData.map((item) => ({
-  //         projectName: item.name,
-  //         projectImage: item.image,
-  //         projectDescription: item.description,
-  //         projectStartDate: item.startDate,
-  //         projectEndDate: item.endDate,
-  //         projectLanguage: item.language,
-  //       }));
-  //       setPortfolioData(recieveData);
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/project/get/65647756b1e006a5838a1952")
+      .then((response) => {
+        const userData = response.data;
+        const projectData = userData.projects;
+        const recieveData = projectData.map((item) => ({
+          projectName: item.name,
+          projectImage: item.image,
+          projectDescription: item.description,
+          projectStartDate: item.startDate,
+          projectEndDate: item.endDate,
+          projectLanguage: item.language,
+        }));
+        setPortfolioData(recieveData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
