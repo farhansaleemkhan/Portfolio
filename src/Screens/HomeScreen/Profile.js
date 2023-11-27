@@ -1,23 +1,25 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import ImageBase64Converter from "../../Components/ImageBase64Converter";
 
 const Profile = () => {
   // const [profileItem, setProfileItem] = useState({});
 
   const profileItem = {
     profileImage:
-      "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoqWIPKg9kRQhn9r3qgpcRSACAXvg-dbTOWQiDN6b5ahLRZ-AU_ioL_uXv5Un0kNGPNhE&usqp=CAU",
+    // "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
     profileName: "Start Portfolio App",
     profileEmail: "portfolio@gmail.com",
     profilePhoneNo: "03333333111",
     profileSkills: ["Graphic Artist", "Web Designer", "Illustrator"],
-    profileAddress: "Lahore Pakistan"
+    profileAddress: "Lahore Pakistan",
   };
 
   // For Backend
   // const fetchData = () => {
   //   axios
-  //     .get("http://localhost:3000/users")
+  //     .get("http://localhost:3000/user/")
   //     .then((response) => {
   //       console.log("Data", response.data)
   //       const userData = response.data;
@@ -40,11 +42,19 @@ const Profile = () => {
   return (
     <div>
       <div className="bg-cyan-500 items-center py-24 flex flex-col">
-        <img
-          src={profileItem.profileImage}
+        <div> 
+        {/* className="h-72 w-96 m-3 rounded-full"> */}
+          <ImageBase64Converter
+            type = "profile"
+            imageUrl={profileItem.profileImage}
+            imgAlt={profileItem.profileName}
+          />
+          {/* <img
+          className="h-72 w-96 m-3 rounded-full"
+          src={}
           alt={profileItem.profileName}
-          className="h-72 w-96"
-        />
+        /> */}
+        </div>
         <p className="text-white text-2xl py-5 font-black">
           <i className="fa-solid fa-minus"></i>
           <i className="fa-solid fa-minus"></i>
@@ -62,13 +72,14 @@ const Profile = () => {
           {profileItem.profilePhoneNo}
         </p>
         <div className="flex">
-          {profileItem.profileSkills && profileItem.profileSkills.map((skill, index) => (
-            <p key={index} className="text-white text-3xl">
-              {skill} 
-              {/* -&nbsp; */}
-              {index < profileItem.profileSkills.length - 1 && " - "}
-            </p>
-          ))}
+          {profileItem.profileSkills &&
+            profileItem.profileSkills.map((skill, index) => (
+              <p key={index} className="text-white text-3xl">
+                {skill}
+                {/* -&nbsp; */}
+                {index < profileItem.profileSkills.length - 1 && " - "}
+              </p>
+            ))}
         </div>
         <p className="text-white font-bold text-2xl">
           {profileItem.profileAddress}

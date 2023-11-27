@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import ImageBase64Converter from "../../Components/ImageBase64Converter";
 
 const Portfolio = () => {
   // const [portfolioData, setPortfolioData] = useState([])
@@ -61,10 +62,10 @@ const Portfolio = () => {
     },
   ];
 
-  //For Backend
+  // For Backend
   // const fetchData = () => {
   //   axios
-  //     .get("http://localhost:3000/projects")
+  //     .get("http://localhost:3000/project/get/")
   //     .then((response) => {
   //       const userData = response.data;
   //       const projectData = userData.projects;
@@ -98,19 +99,27 @@ const Portfolio = () => {
           <i className="fa-solid fa-minus"></i>
         </p>
         <div className="grid grid-cols-3 grid-rows-2 my-10 gap-24">
-          {portfolioData.map((data) => (
-            <div className="items-center h-48 w-64 my-10 rounded">
+          {portfolioData.map((data, index) => (
+            <div className="items-center h-48 w-64 my-10 rounded" key={index}>
               <div className="align-center justify-center hover:bg-cyan-500 hover:rounded hover:text-white hover:opacity-75">
-                <img
-                  key={data.projectName}
+                <ImageBase64Converter
+                  type = "portfolio"
+                  imageUrl={data.projectImage}
+                  imgAlt={data.projectName}
+                />
+                {/* <img
                   className="hover:opacity-25 h-48 w-64 rounded"
                   src={data.projectImage}
                   alt={data.projectName}
-                />
+                /> */}
               </div>
               <div className="bg-slate-700 pl-1 rounded text-white py-5">
-                <p className="font-semibold">Project Name: {data.projectName}</p>
-                <p className="">Project Description: {data.projectDescription}</p>
+                <p className="font-semibold">
+                  Project Name: {data.projectName}
+                </p>
+                <p className="">
+                  Project Description: {data.projectDescription}
+                </p>
                 <p className="">Start Date: {data.projectStartDate}</p>
                 <p className="">End Date: {data.projectEndDate}</p>
                 <p className="">Technology: {data.projectLanguage}</p>

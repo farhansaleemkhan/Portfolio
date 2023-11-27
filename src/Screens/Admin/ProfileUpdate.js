@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import SuccessAlert from "../../Components/SuccessAlert";
-import ErrorAlert from "../../Components/ErrorAlert";
+import Alert from "../../Components/Alert";
+import Form from "../../Components/Form";
 
 const ProfileUpdate = () => {
   const [errors, setErrors] = useState({});
@@ -41,36 +41,37 @@ const ProfileUpdate = () => {
       inputName: "Email Address",
       inputType: "email",
       inputPlaceholder: "john.doe@company.com",
+      // inputPattern: /^\S+@\S+\.\S+$/,
       inputPattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
     },
     {
       inputID: "phoneNumber",
       inputName: "Phone Number",
-      inputType: "number",
-      inputPlaceholder: "03456789012",
-      inputPattern: "^03d{9}$",
+      inputType: "tel",
+      inputPlaceholder: "+92 345-6789012",
+      // inputPattern: /^\+92 3\d{2}-\d{7}$/,
     },
     {
       inputID: "image",
       inputName: "Image URL",
       inputType: "url",
       inputPlaceholder: "http://flowbite.com",
-      inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
-      // inputPattern: /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+      // inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
+      inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
     },
-    {
-      inputID: "skills",
-      inputName: "Skills",
-      inputType: "text",
-      inputPlaceholder: "Enter your skills",
-      inputPattern: "^[a-zA-Z0-9._%+-]+$",
-    },
+    // {
+    //   inputID: "skills",
+    //   inputName: "Skills",
+    //   inputType: "text",
+    //   inputPlaceholder: "Enter your skills",
+    //   inputPattern: "^[a-zA-Z0-9._%+-]+$",
+    // },
     {
       inputID: "address",
       inputName: "Address",
       inputType: "text",
-      inputPlaceholder: "Enter your Address",
-      inputPattern: "^[a-zA-Z0-9._%+-]+$",
+      inputPlaceholder: "Enter your Address start with House No",
+      inputPattern: /^House No.\S+\,\S+$/,
     },
   ];
 
@@ -79,7 +80,6 @@ const ProfileUpdate = () => {
     email: "",
     phoneNumber: "",
     image: "",
-    skills: "",
     address: "",
   });
 
@@ -88,18 +88,10 @@ const ProfileUpdate = () => {
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
 
-    if (name === "skills") {
-      const skills = value.split(",");
-      setFormData({
-        ...formData,
-        [name]: skills,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const validateForm = () => {
@@ -126,9 +118,6 @@ const ProfileUpdate = () => {
     if (!formData.image) {
       newError.image = "Image is required";
     }
-    if (!formData.skills) {
-      newError.skills = "Skills are required";
-    }
     if (!formData.address) {
       newError.address = "Address is required";
     }
@@ -139,44 +128,51 @@ const ProfileUpdate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateForm();
+    const formError = validateForm();
 
-    if (Object.keys(errors).length === 0) {
-      const dataToSend = {
-        name: formData.name,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        image: formData.image,
-        skills: formData.skills,
-        address: formData.address,
-      };
-
-      console.log("Data to send: ", dataToSend);
-
-      if(editProfile){
+    if (Object.keys(formError).length === 0) {
+      if (editProfile) {
         //For Updating data
+        const dataToUpdate = {
+          name: formData.name,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          image: formData.image,
+          address: formData.address,
+        };
+
+        console.log("Data to send: ", dataToUpdate);
         axios
-        .put(`/api/profiles/${editProfile.id}`, dataToSend)
-        .then((updateProfile) => {
-          setSuccessMessage(
-            "Congratulations! Your profile has been updated successfully"
-          );
-          console.log("Profile is updated", updateProfile);
-        })
-        .catch((error) => {
-          setErrorMessage("Oops! Something went wrong");
-          console.log("Error occurred", error);
-        });
-      }
-      else{
-        //For Creating new Backend part
-        axios
-          .post("", dataToSend)
+          .put(`/api/profile/${editProfile.id}`, dataToUpdate)
           .then((updateProfile) => {
             setSuccessMessage(
-              "Congrulation! Your profile has been updated successfully"
+              "Congratulations! Your profile has been updated successfully"
             );
             console.log("Profile is updated", updateProfile);
+            setEditProfile(null);
+          })
+          .catch((error) => {
+            setErrorMessage("Oops! Something went wrong");
+            console.log("Error occurred", error);
+          });
+      } else {
+        //For Creating new Backend part
+        const dataToSend = {
+          name: formData.name,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          image: formData.image,
+          address: formData.address,
+        };
+
+        console.log("Data to send: ", dataToSend);
+        axios
+          .post("http://localhost:3000/user/new", dataToSend)
+          .then((createProfile) => {
+            setSuccessMessage(
+              "Congrulation! Your profile has been created successfully"
+            );
+            console.log("Profile is updated", createProfile);
           })
           .catch((error) => {
             setErrorMessage("Oops! Something went wrong");
@@ -189,38 +185,34 @@ const ProfileUpdate = () => {
         email: "",
         phoneNumber: "",
         image: "",
-        skills: "",
         address: "",
       });
-
-      setEditProfile(null);
     } else {
       setErrorMessage("Please complete all the fields");
     }
   };
 
   // For getting data from Backend
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/users")
-  //     .then((response) => {
-  //       console.log("Data", response.data)
-  //       const userData = response.data;
-  //       const recieveData = {
-  //         profileImage: userData.image,
-  //         profileName: userData.name,
-  //         profileEmail: userData.email,
-  //         profilePhoneNo: userData.phoneNumber,
-  //         profileSkills: userData.skills,
-  //         profileAddress: userData.address,
-  //       };
-  //       setProfileItem(recieveData);
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/user/")
+      .then((response) => {
+        console.log("Data", response.data)
+        const userData = response.data;
+        const recieveData = {
+          profileImage: userData.image,
+          profileName: userData.name,
+          profileEmail: userData.email,
+          profilePhoneNo: userData.phoneNumber,
+          profileAddress: userData.address,
+        };
+        setProfileItem(recieveData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleEditClick = (profile) => {
     setEditProfile(profile);
@@ -229,7 +221,7 @@ const ProfileUpdate = () => {
       name: profile.profileName,
       email: profile.profileEmail,
       phoneNumber: profile.profilePhoneNo,
-      skills: profile.profileSkills ? profile.profileSkills.join(",") : "",
+      // skills: profile.profileSkills ? profile.profileSkills.join(",") : "",
       address: profile.profileAddress,
     });
     setIsUpdateProfile(true);
@@ -241,7 +233,7 @@ const ProfileUpdate = () => {
         Profile
       </h1>
 
-      {(!isUpdateProfile && Object.keys(profileItem).length !== 0 ) && (
+      {!isUpdateProfile && Object.keys(profileItem).length !== 0 && (
         <>
           <div className="bg-cyan-500 items-center py-24 flex flex-col">
             <img
@@ -286,50 +278,29 @@ const ProfileUpdate = () => {
             Edit <i className="fa-solid fa-pencil" />
           </button>
         </>
-      )} 
+      )}
       {(Object.keys(profileItem).length === 0 || isUpdateProfile) && (
         <form className="py-10 border border-black" onSubmit={handleSubmit}>
           <div className="grid gap-6 m-6 md:grid-cols-2">
-            <div>
-              {formInput.map((data, index) => (
-                <div className="text-left mb-5" key={index}>
-                  <label
-                    htmlFor={data.inputType}
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    {data.inputName}
-                  </label>
-                  <input
-                    type={data.inputType}
-                    id={data.inputID}
-                    name={data.inputID}
-                    className={`bg-gray-50 appearance-none border mt-5 outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
-                      errors[data.inputID] ? "border-red-500" : ""
-                    }`}
-                    placeholder={data.inputPlaceholder}
-                    pattern={data.inputPattern}
-                    value={formData[data.inputID]}
-                    onChange={handleInputChange}
-                  />
-                  {errors[data.inputID] && (
-                    <p className="text-red-500 text-sm">
-                      {errors[data.inputID]}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
+            <Form
+              formInput={formInput}
+              errors={errors}
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
           </div>
           {successMessage && (
-            <SuccessAlert
+            <Alert
+              type="success"
               message={successMessage}
-              closeSuccessMessage={closeSuccessMessage}
+              closeAlert={closeSuccessMessage}
             />
           )}
           {errorMessage && (
-            <ErrorAlert
+            <Alert
+              type="error"
               message={errorMessage}
-              closeErrorMessage={closeErrorMessage}
+              closeAlert={closeErrorMessage}
             />
           )}
           <button

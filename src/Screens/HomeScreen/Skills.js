@@ -1,40 +1,32 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
-
-const Rating = ({ value }) => {
-  const stars = [];
-
-  // Filling the stars based on the rating value
-  for (let i = 1; i <= 5; i++) {
-    if (i <= value) {
-      stars.push(<i key={i} className="fa fa-star text-yellow-500" />);
-    } else {
-      stars.push(<i key={i} className="fa fa-star text-gray-300" />);
-    }
-  }
-
-  return <div>{stars}</div>;
-};
+import Rating from "../../Components/Rating";
 
 const Skills = () => {
   // const [userSkills , setUserSkills] = useState([])
-  
-  const userSkills = [
-    {name: "React", rating: "3"},
-    {name: "Node", rating: "2"},
-  ]
 
-  // For Backend
+  const userSkills = [
+    { name: "HTML", rating: 5 },
+    { name: "React", rating: 4 },
+    { name: "Node", rating: 2 },
+  ];
+
+  // For get data from Backend
   // const fetchData = () => {
   //   axios
-  //     .get("http://localhost:3000/users")
+  //     .get("http://localhost:3000/skill/get/")
   //     .then((response) => {
-  //       console.log("Data", response.data)
+  //       console.log("Data", response.data);
   //       const userData = response.data;
-  //       const recieveData = {
-  //         profileSkills: userData.skills,
-  //       };
+  //       const skillData = userData.skill;
+  //       const skills = userData.skills;
+  //       console.log("Skill Data Array ==", skills);
+  //       const recieveData = skills.map((item) => ({
+  //         name: item.name,
+  //         rating: item.rating,
+  //         skillId: item._id,
+  //       }));
+  //       console.log("Recieve Data ==", recieveData);
   //       setUserSkills(recieveData);
   //     })
   //     .catch((error) => console.error("Error fetching data:", error));
@@ -56,15 +48,15 @@ const Skills = () => {
           <i className="fa-solid fa-minus"></i>
           <i className="fa-solid fa-minus"></i>
         </p>
-            <div className="text-white flex flex-row px-80 py-5">
-            {userSkills && userSkills.map((skill, index) => (
-            <div key={index} className="flex flex-col items-center">
-            <p className="text-white text-3xl p-5">{skill.name}</p>
-            <Rating value={skill.rating} />
-            <br></br>
-          </div>
-          ))}
-            </div>
+        <div className="text-white flex flex-col px-80 py-5">
+          {userSkills &&
+            userSkills.map((skill, index) => (
+              <div key={index} className="flex flex-row items-center">
+                <p className="text-white text-3xl p-5">{skill.name}</p>
+                <Rating value={skill.rating} />
+              </div>
+            ))}
+        </div>
       </div>
     </>
   );

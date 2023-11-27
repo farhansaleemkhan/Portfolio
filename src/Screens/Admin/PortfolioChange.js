@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import SuccessAlert from "../../Components/SuccessAlert";
-import ErrorAlert from "../../Components/ErrorAlert";
+import Alert from "../../Components/Alert";
+import Form from "../../Components/Form";
 import axios from "axios";
 
 const PortfolioChange = () => {
@@ -63,8 +63,8 @@ const PortfolioChange = () => {
       inputName: "Project Image URL",
       inputType: "url",
       inputPlaceholder: "http://flowbite.com",
-      inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
-      // inputPattern: /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+      // inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
+      inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
     },
     {
       inputID: "description",
@@ -133,12 +133,32 @@ const PortfolioChange = () => {
     const newError = {};
 
     formInput.forEach((input) => {
-      if (!formData[input.inputID]) {
-        newError[input.inputID] = `${input.inputName} is required`;
-      }
+      // if (!formData[input.inputID]) {
+      //   newError[input.inputID] = `${input.inputName} is required`;
+      // }
       // else if (input.inputPattern && !input.inputPattern.test(formData[input.inputID])) {
       //   newError[input.inputID] = `Invalid ${input.inputName}`;
       // }
+      if (!formData.name) {
+        newError.name = "Project Name is required";
+      }
+      if (!formData.image) {
+        newError.image = "Project Image is required";
+      }
+      if (!formData.description) {
+        newError.description = "Project Description is required";
+      }
+      if (!formData.startDate) {
+        newError.startDate = "Start Date is required";
+      }
+      if (!formData.endDate) {
+        newError.endDate = "End Date is required";
+      } else if (formData.endDate < formData.startDate) {
+        newError.endDate = "End Date must greater than start date";
+      }
+      if (!formData.language) {
+        newError.language = "Project Language is required";
+      }
     });
 
     setErrors(newError);
@@ -160,12 +180,14 @@ const PortfolioChange = () => {
         endDate: formData.endDate,
         language: formData.language,
         userId: formData.userId,
-      }
+      };
       if (isNewProject && editProjectIndex !== null) {
         axios
           .put(`http://localhost:3000/project/${formData.userId}`, formData)
           .then((response) => {
-            setSuccessMessage("Congratulations! Your project has been updated successfully");
+            setSuccessMessage(
+              "Congratulations! Your project has been updated successfully"
+            );
             console.log("Project is updated", response.data);
           })
           .catch((error) => {
@@ -175,15 +197,17 @@ const PortfolioChange = () => {
         setEditProjectIndex(null);
       } else {
         axios
-        .post("http://localhost:3000/project/new", dataToSend)
-        .then((updateProfile) => {
-          setSuccessMessage("Congrulation! Your data has been saved successfully")
-          console.log("Profile is updated", updateProfile)
-        })
-        .catch((error) => {
-          setErrorMessage("Oop! Something went wrong")
-          console.log("Error occur", error)
-        });
+          .post("http://localhost:3000/project/new", dataToSend)
+          .then((updateProfile) => {
+            setSuccessMessage(
+              "Congrulation! Your data has been saved successfully"
+            );
+            console.log("Profile is updated", updateProfile);
+          })
+          .catch((error) => {
+            setErrorMessage("Oop! Something went wrong");
+            console.log("Error occur", error);
+          });
       }
       setFormData({
         name: "",
@@ -198,6 +222,30 @@ const PortfolioChange = () => {
       setErrorMessage("Please complete all input fields");
     }
   };
+
+    // For Backend
+  // const fetchData = () => {
+  //   axios
+  //     .get("http://localhost:3000/project/get/")
+  //     .then((response) => {
+  //       const userData = response.data;
+  //       const projectData = userData.projects;
+  //       const recieveData = projectData.map((item) => ({
+  //         projectName: item.name,
+  //         projectImage: item.image,
+  //         projectDescription: item.description,
+  //         projectStartDate: item.startDate,
+  //         projectEndDate: item.endDate,
+  //         projectLanguage: item.language,
+  //         projectId: item._id,
+  //       }));
+  //       setPortfolioData(recieveData);
+  //     })
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const handleEditClick = (index) => {
     const projectToEdit = portfolioData[index];
@@ -222,16 +270,18 @@ const PortfolioChange = () => {
     const projectToDelete = portfolioData[index];
     const deleteProjectId = projectToDelete.projectId;
     axios
-    .delete(`http://localhost:3000/project/${deleteProjectId}`)
-    .then((response) => {
-      setSuccessMessage("Congratulations! Selected project has been deleted successfully");
-      console.log("Project is deleted", response.data);
-    })
-    .catch((error) => {
-      setErrorMessage("Oops! Something went wrong");
-      console.log("Error occurred", error);
-    });
-  }
+      .delete(`http://localhost:3000/project/${deleteProjectId}`)
+      .then((response) => {
+        setSuccessMessage(
+          "Congratulations! Selected project has been deleted successfully"
+        );
+        console.log("Project is deleted", response.data);
+      })
+      .catch((error) => {
+        setErrorMessage("Oops! Something went wrong");
+        console.log("Error occurred", error);
+      });
+  };
 
   return (
     <div className="p-5 md:ml-64">
@@ -277,8 +327,13 @@ const PortfolioChange = () => {
       {(isNewProject || portfolioData.length === 0) && (
         <form className="py-10 border border-black" onSubmit={handleSubmit}>
           <div className="grid gap-6 m-6 md:grid-cols-2">
-            <div>
-              {formInput.map((data, index) => (
+            <Form
+              formInput={formInput}
+              errors={errors}
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
+            {/* {formInput.map((data, index) => (
                 <div className="text-left mb-5" key={index}>
                   <label
                     htmlFor={data.inputType}
@@ -304,19 +359,20 @@ const PortfolioChange = () => {
                     </p>
                   )}
                 </div>
-              ))}
-            </div>
+              ))} */}
           </div>
           {successMessage && (
-            <SuccessAlert
+            <Alert
+              type="success"
               message={successMessage}
-              closeSuccessMessage={closeSuccessMessage}
+              closeAlert={closeSuccessMessage}
             />
           )}
           {errorMessage && (
-            <ErrorAlert
+            <Alert
+              type="error"
               message={errorMessage}
-              closeErrorMessage={closeErrorMessage}
+              closeAlert={closeErrorMessage}
             />
           )}
           <button
@@ -355,7 +411,7 @@ const PortfolioChange = () => {
                   Edit <i className="fa-solid fa-pencil" />
                 </button>
                 <button
-                  className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="text-white bg-cyan-500 ml-3 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => handleDeleteClick(index)}
                 >
                   Delete <i className="fa-solid fa-trash" />

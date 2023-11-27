@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import SuccessAlert from "../../Components/SuccessAlert";
-import ErrorAlert from "../../Components/ErrorAlert";
+import Alert from "../../Components/Alert";
+import Form from "../../Components/Form";
 
 const AboutChange = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  // const [aboutData , setAboutData] = useState({})
+  const [aboutData , setAboutData] = useState({})
   const [editAbout, setEditAbout] = useState(null);
   const [isUpdateAbout, setIsUpdateAbout] = useState(false);
 
@@ -18,15 +18,15 @@ const AboutChange = () => {
     setErrorMessage("");
   };
 
-  const aboutData = {
-    aboutDescription:
-      "Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization. You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!",
-    resumeURL: "",
-  };
+  // const aboutData = {
+  //   aboutDescription:
+  //     "Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization. You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!",
+  //   resumeURL: "",
+  // };
 
   const formInput = [
     {
-      inputID: "description",
+      inputID: "aboutDescription",
       inputName: "About Yourself",
       inputType: "text",
       inputPlaceholder: "Write about yourself",
@@ -39,8 +39,8 @@ const AboutChange = () => {
       inputName: "Resume Link",
       inputType: "url",
       inputPlaceholder: "http://flowbite.com",
-      inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
-      // inputPattern: /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+      // inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
+      inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
     },
     {
       inputID: "userId",
@@ -52,7 +52,7 @@ const AboutChange = () => {
   ];
 
   const [formData, setFormData] = useState({
-    description: "",
+    aboutDescription: "",
     resume: "",
     userId: "",
   });
@@ -80,8 +80,8 @@ const AboutChange = () => {
     //   }
     // });
 
-    if (!formData.description) {
-      newError.description = "Description is required";
+    if (!formData.aboutDescription) {
+      newError.aboutDescription = "Description is required";
     }
     if (!formData.resume) {
       newError.resume = "Resume Link is required";
@@ -100,25 +100,42 @@ const AboutChange = () => {
 
     if (Object.keys(formError).length === 0) {
       const dataToSend = {
-        description: formData.description,
+        description: formData.aboutDescription,
         resume: formData.resume,
         userId: formData.userId,
       };
       console.log("about change ===", dataToSend);
-
-      //For storing data in backend
-      axios
-        .post("api", dataToSend)
-        .then((createAbout) => {
+      if(editAbout){
+        //For Updating data
+        axios
+        .put(`http://localhost:3000/about/${formData.userId}`, dataToSend)
+        .then((updateAbout) => {
           setSuccessMessage(
-            "Congrulation! Your data has been saved successfully"
+            "Congrulation! Your data has been updated successfully"
           );
-          console.log("About is created", createAbout);
+          console.log("About is updated", updateAbout);
         })
         .catch((error) => {
           setErrorMessage("Oops! Something went wrong");
           console.log("Error occur", error);
         });
+      }
+      else{
+
+        //For storing data in backend
+        axios
+          .post("api", dataToSend)
+          .then((createAbout) => {
+            setSuccessMessage(
+              "Congrulation! Your data has been saved successfully"
+            );
+            console.log("About is created", createAbout);
+          })
+          .catch((error) => {
+            setErrorMessage("Oops! Something went wrong");
+            console.log("Error occur", error);
+          });
+      }
 
       setFormData({
         description: "",
@@ -139,7 +156,8 @@ const AboutChange = () => {
   //      const recieveData = userData.about;
   //       setAboutText({
   //         aboutDescription : recieveData.description,
-  //         resumeURL : recieveData.resume
+  //         resumeURL : recieveData.resume,
+  //         userId: recieveData._id;
   //       });
   //     })
   //     .catch((error) => console.error("Error fetching data:", error));
@@ -151,7 +169,7 @@ const AboutChange = () => {
   const handleEditClick = (about) => {
     setEditAbout(about);
     setFormData({
-      description: about.aboutDescription,
+      aboutDescription: about.aboutDescription,
       resume: about.resumeURL,
       userId: about._id,
     });
@@ -185,7 +203,8 @@ const AboutChange = () => {
       {(Object.keys(aboutData).length === 0 || isUpdateAbout) && (
         <form className="py-10" onSubmit={handleSubmit}>
           <div>
-            {formInput.map((data, index) => (
+          <Form formInput={formInput} errors={errors} formData={formData} handleInputChange={handleInputChange} />
+            {/* {formInput.map((data, index) => (
               <div key={index}>
                 <label
                   htmlFor={data.inputType}
@@ -228,18 +247,20 @@ const AboutChange = () => {
                   </p>
                 )}
               </div>
-            ))}
+            ))} */}
           </div>
           {successMessage && (
-            <SuccessAlert
+            <Alert
+              type="success"
               message={successMessage}
-              closeSuccessMessage={closeSuccessMessage}
+              closeAlert={closeSuccessMessage}
             />
           )}
           {errorMessage && (
-            <ErrorAlert
+            <Alert
+              type="error"
               message={errorMessage}
-              closeErrorMessage={closeErrorMessage}
+              closeAlert={closeErrorMessage}
             />
           )}
           <button
@@ -255,17 +276,11 @@ const AboutChange = () => {
           <div className="text-white flex flex-row px-80 py-5">
             <p className="text-left">{aboutData.aboutDescription}</p>
           </div>
-          <button
-            className="text-white outline outline-white rounded-full hover:bg-white hover:text-black text-lg p-2"
-            type="button"
-          >
-            <i className="fa fa-download"></i>Download Resume!
-            {aboutData.resumeURL}
-          </button>
+          
           <br />
           <br />
           <button
-            className="text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white mr-5 bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => handleEditClick(aboutData)}
           >
             Edit <i className="fa-solid fa-pencil" />

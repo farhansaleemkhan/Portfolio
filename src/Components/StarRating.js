@@ -5,7 +5,7 @@ const StarRating = ({ skillName, setSkillRating }) => {
 
   const handleClick = (value) => {
     setRating(value);
-    setSkillRating(value); // Update parent state with skill name and rating
+    setSkillRating(value);
   };
 
   return (
