@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
+import {commonDeletion} from "./commonCascade.js";
 
-// schemaOfAbout = SOA
-const SOA = new mongoose.Schema({
+const aboutSchema = new mongoose.Schema({
   description: {
     type: String,
-    minLength : 10,  
-    maxLength : 800,
-    required : true,
+    minLength: 10,
+    maxLength: 800,
+    required :true
   },
-  resume: {
-    type: String,
-    validate: /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
-    required : true,
-    unique : true,
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
-const AboutModel = mongoose.model("About", SOA);
+commonDeletion(aboutSchema,"about");
+
+const AboutModel = mongoose.model("AboutModel", aboutSchema);
 export default AboutModel;

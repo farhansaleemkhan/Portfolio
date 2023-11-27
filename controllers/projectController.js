@@ -1,73 +1,64 @@
 import ProjectModel from "../models/projectSchema.js";
 import UserModel from "../models/userSchema.js";
+import handleResponse from "./commonResponse.js";
+
+import { findWithId, deleteWithId, updateWithId } from "./commonControllers.js";
 
 export const createProject = (req, res) => {
-  ProjectModel.create(req.body)
-    .then((newProject) => {
-      return UserModel.findById(req.body.userId)
-        .then((user) => {
-          user.project.push(newProject._id);
-          return user.save().then((user) => {
-            res.status(201).json("Successfully Saved " + user);
-          });
-        })
-        .catch((err) => {
-          res.status(500).send(err);
-        });
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-};
+  UserModel.findById(req.body.userId)
+  .then((user)=>{
+    if(!user){
+      throw "User is Not Found";
+     }
+     if (req.body.startDate <= req.body.endDate) {
+      ProjectModel.create(req.body)
+        .then((newProject) => {
+            user.projects.push(newProject._id);
+            return user.save().then(() => {
+              handleResponse(
+                res,
+                201,
+                user
+              );
+            });
+          })
+          .catch((err)=>{
+            handleResponse(res,500,err);
+          })
+        }
+       else {
+      handleResponse(
+        res,
+        500,
+        "End Date of Project Cannot be Less than Start Date"
+      );
+    }
+  })
+  .catch((err)=>{
+    handleResponse(res,404,err);
+  })
+  };
 
 export const getProjectById = (req, res) => {
-  ProjectModel.findById(req.params.id)
-    .then((project) => {
-      if (project === null) {
-        throw "Project is Not Found";
-      } else {
-        res.status(200).send(project);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-};
-
-export const getProjects = (req, res) => {
-  ProjectModel.find()
-    .then((projects) => {
-      res.status(200).send(projects);
-    })
-    .catch((err) => {
-      res.status(500).send("Cannot Get Projects " + err);
-    });
+  findWithId(ProjectModel, req, res, "Project");
 };
 
 export const updateProjectById = (req, res) => {
-  ProjectModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((updatedProject) => {
-      if (updatedProject === null) {
-        throw "Cannot Update this Project";
-      } else {
-        res.status(201).send(updatedProject);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+  if(req.body.startDate <= req.body.endDate){
+  ProjectModel.findByIdAndUpdate(req.params.id,req.body,{new:true})
+  .then((updatedProject)=>{
+    handleResponse(res,201,updatedProject);
+  })
+  .catch((err)=>{
+    handleResponse(res,500,err);
+  })
+  }
+  else {
+    handleResponse(res,500,"End Date of Project Cannot be Less than Start Date");
+  }
+
 };
 
 export const deleteProjectById = (req, res) => {
-  ProjectModel.findByIdAndDelete(req.params.id)
-    .then((deletedProject) => {
-      if (deletedProject === null) {
-        throw "Cannot Delete this Project";
-      } else {
-        res.status(200).send(deletedProject);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+  deleteWithId(ProjectModel, req, res, "Project");
 };

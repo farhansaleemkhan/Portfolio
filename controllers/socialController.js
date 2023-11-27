@@ -1,73 +1,52 @@
 import SocialModel from "../models/socialSiteSchema.js";
 import UserModel from "../models/userSchema.js";
+import handleResponse from "./commonResponse.js";
+import { findWithId, deleteWithId, updateWithId } from "./commonControllers.js";
 
 export const createSocial = (req, res) => {
-  SocialModel.create(req.body)
+  UserModel.findById(req.body.userId)
+  .then((user)=>{
+    if(!user){
+      throw "User is Not Found";
+    }
+    SocialModel.create(req.body)
     .then((newSocial) => {
-      return UserModel.findById(req.body.userId)
-        .then((user) => {
-          user.social.push(newSocial._id);
-          return user.save().then((user) => {
-            res.status(201).json("Successfully Saved " + user);
-          });
-        })
-        .catch((err) => {
-          res.status(500).send(err);
+        user.social.push(newSocial._id);
+        return user.save().then(() => {
+          handleResponse(
+            res,
+            201,
+            user
+          );
         });
+      })
+      .catch((err)=>{
+        handleResponse(res,500,err);
+      })
     })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+  .catch((err)=>{
+    handleResponse(res,404,err);
+  })
 };
 
 export const getSocialById = (req, res) => {
-  SocialModel.findById(req.params.id)
-    .then((social) => {
-      if (social === null) {
-        throw "Social Account is Not Found";
-      } else {
-        res.status(200).send(social);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+  findWithId(SocialModel, req, res, "Social");
+};
+
+export const updateSocialById = (req, res) => {
+  updateWithId(SocialModel, req, res, "Social");
+};
+
+export const deleteSocialById = (req, res) => {
+  deleteWithId(SocialModel, req, res, "Social");
 };
 
 export const getSocials = (req, res) => {
   SocialModel.find()
     .then((socials) => {
-      res.status(200).send(socials);
+      handleResponse(res, 200, socials);
     })
     .catch((err) => {
-      res.status(500).send("Cannot Get Socials " + err);
-    });
-};
-
-export const updateSocialById = (req, res) => {
-  SocialModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((updatedSocial) => {
-      if (updatedSocial === null) {
-        throw "Cannot Update this Social";
-      } else {
-        res.status(201).send(updatedSocial);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-};
-
-export const deleteSocialById = (req, res) => {
-  SocialModel.findByIdAndDelete(id)
-    .then((deletedSocial) => {
-      if (deletedSocial === null) {
-        throw "Cannot Delete this Social";
-      } else {
-        res.status(200).send(deletedSocial);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
+      handleResponse(res, 404, err);
     });
 };

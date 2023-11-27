@@ -1,63 +1,66 @@
 import UserModel from "../models/userSchema.js";
+import handleResponse from "./commonResponse.js";
+import {
+  findWithId,
+  deleteWithId,
+  updateWithId,
+  userDetails,
+} from "./commonControllers.js";
 
 export const createUser = (req, res) => {
   UserModel.create(req.body)
     .then((newUser) => {
-      res.status(201).send(newUser);
+      handleResponse(res, 201, newUser);
     })
     .catch((err) => {
-      res.status(500).send("Cannot Create About " + err);
+      handleResponse(res, 500, err);
     });
 };
 
 export const getUserById = (req, res) => {
-  UserModel.findById(req.params.id)
-    .then((user) => {
-      if (user === null) {
-        throw "User is Not Found";
-      } else {
-        res.status(200).send(user);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-};
-
-export const getUsers = (req, res) => {
-  UserModel.find()
-    .then((users) => {
-      res.status(200).send(users);
-    })
-    .catch((err) => {
-      res.status(500).send("Cannot Get Users " + err);
-    });
+  findWithId(UserModel, req, res, "User");
 };
 
 export const updateUserById = (req, res) => {
-  UserModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((updatedUser) => {
-      if (updatedSocial === null) {
-        throw "Cannot Update this User";
-      } else {
-        res.status(201).send(updatedUser);
-      }
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+  updateWithId(UserModel, req, res, "User");
 };
 
 export const deleteUserById = (req, res) => {
-  UserModel.findByIdAndDelete(id)
-    .then((deletedUser) => {
-      if (deletedUser === null) {
-        throw "Cannot Delete this User";
-      } else {
-        res.status(200).send(deletedUser);
+  deleteWithId(UserModel, req, res, "User");
+};
+
+export const getUserProjects = (req, res) => {
+  userDetails(req, res, "projects");
+};
+
+export const getUserMessages = (req, res) => {
+  UserModel.findById(req.params.id)
+    .populate({
+      path: "contact",
+    })
+    .then((doc) => {
+      if (!doc) {
+        throw "User is Not Found";
       }
+      handleResponse(
+        res,
+        200,
+        doc.contact.message
+      );
     })
     .catch((err) => {
-      res.status(500).send(err);
+      handleResponse(res, 404, err);
     });
+};
+
+export const getUserSocials = (req, res) => {
+  userDetails(req, res, "social");
+};
+
+export const getUserAbout = (req, res) => {
+  userDetails(req, res, "about");
+};
+
+export const getUserSkills = (req, res) => {
+  userDetails(req, res, "skill");
 };

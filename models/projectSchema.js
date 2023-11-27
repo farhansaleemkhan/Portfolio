@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+import {commonDeleteArrayField} from "./commonCascade.js";
 
-//schemaOfProject = SOP
-const SOP = new mongoose.Schema({
+const projectSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: 5,
@@ -9,9 +9,9 @@ const SOP = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String,
-    validate:
-      /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+    type: 'String',
+    validate: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
+    unique : true,
     required: true,
   },
   description: {
@@ -34,8 +34,13 @@ const SOP = new mongoose.Schema({
       required: true,
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const ProjectModel = mongoose.model("Project", SOP);
+commonDeleteArrayField(projectSchema,"projects");
 
+const ProjectModel = mongoose.model("ProjectModel", projectSchema);
 export default ProjectModel;
