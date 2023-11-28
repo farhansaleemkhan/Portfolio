@@ -3,64 +3,64 @@ import React, { useEffect, useState } from "react";
 import ImageBase64Converter from "../../Components/ImageBase64Converter";
 
 const Portfolio = () => {
-  // const [portfolioData, setPortfolioData] = useState([])
+  const [portfolioData, setPortfolioData] = useState([])
 
-  const portfolioData = [
-    {
-      projectName: "Cabin",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Cake",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Circus",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Game",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/game.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Safe",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/safe.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-    {
-      projectName: "Submarine",
-      projectImage:
-        "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/submarine.png",
-      projectDescription: "",
-      projectStartDate: "",
-      projectEndDate: "",
-      projectLanguage: "",
-    },
-  ];
+  // const portfolioData = [
+  //   {
+  //     projectName: "Cabin",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Cake",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Circus",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Game",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/game.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Safe",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/safe.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  //   {
+  //     projectName: "Submarine",
+  //     projectImage:
+  //       "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/submarine.png",
+  //     projectDescription: "",
+  //     projectStartDate: "",
+  //     projectEndDate: "",
+  //     projectLanguage: "",
+  //   },
+  // ];
 
   // For Backend
   // const fetchData = () => {

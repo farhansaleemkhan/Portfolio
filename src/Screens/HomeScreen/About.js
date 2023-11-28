@@ -13,7 +13,7 @@ const About = () => {
   //For Backend
   // const fetchData = () => {
   //   axios
-  //     .get("http://localhost:3000/abouts")
+  //     .get("http://localhost:3000/about/get/65647756b1e006a5838a1952")
   //     .then((response) => {
   //      const userData = response.data;
   //      const recieveData = userData.about;

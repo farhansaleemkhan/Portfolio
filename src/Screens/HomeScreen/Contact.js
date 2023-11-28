@@ -7,6 +7,7 @@ const Contact = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const userId = "65647756b1e006a5838a1952";
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -53,25 +54,30 @@ const Contact = () => {
     email: "",
     phoneNumber: "",
     message: "",
-    userId: "",
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
 
-    if (name === "message") {
-      const skills = value.split(",");
-      setFormData({
-        ...formData,
-        [name]: skills,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    // if (name === "message") {
+    //   const skills = value.split(",");
+    //   setFormData({
+    //     ...formData,
+    //     [name]: skills,
+    //   });
+    // } else {
+    //   setFormData({
+    //     ...formData,
+    //     [name]: value,
+    //   });
+    // }
+
+    setFormData({
+          ...formData,
+          [name]: value,
+        });
+        
   };
 
   const validateForm = () => {
@@ -115,12 +121,12 @@ const Contact = () => {
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         message: formData.message,
-        userId: formData.userId,
+        userId: userId,
       };
 
       //Backend part
       axios
-        .post("", dataToSend)
+        .post("http://localhost:3000/contact/new", dataToSend)
         .then((messageSend) => {
           console.log("Message Send Successfully", messageSend);
           setSuccessMessage(

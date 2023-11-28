@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Alert from "../../Components/Alert";
 import Form from "../../Components/Form";
@@ -10,6 +10,8 @@ const AboutChange = () => {
   const [aboutData , setAboutData] = useState({})
   const [editAbout, setEditAbout] = useState(null);
   const [isUpdateAbout, setIsUpdateAbout] = useState(false);
+  const [aboutId, setAboutId] = useState("");
+  const userId = "65647756b1e006a5838a1952";
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -17,12 +19,6 @@ const AboutChange = () => {
   const closeErrorMessage = () => {
     setErrorMessage("");
   };
-
-  // const aboutData = {
-  //   aboutDescription:
-  //     "Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization. You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!",
-  //   resumeURL: "",
-  // };
 
   const formInput = [
     {
@@ -34,27 +30,10 @@ const AboutChange = () => {
       inputRow: "5",
       inputColumn: "5",
     },
-    {
-      inputID: "resume",
-      inputName: "Resume Link",
-      inputType: "url",
-      inputPlaceholder: "http://flowbite.com",
-      // inputPattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/,
-      inputPattern: /^((http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?)|(data:image\/[a-zA-Z+]+;base64,[-\/+=a-zA-Z0-9]+))$/,
-    },
-    {
-      inputID: "userId",
-      inputName: "User ID",
-      inputType: "text",
-      inputPlaceholder: "Enter User ID",
-      inputPattern: "^[a-zA-Z0-9._%+-]+$",
-    },
   ];
 
   const [formData, setFormData] = useState({
     aboutDescription: "",
-    resume: "",
-    userId: "",
   });
 
   const handleInputChange = (event) => {
@@ -71,23 +50,8 @@ const AboutChange = () => {
   const validateForm = () => {
     const newError = {};
 
-    // formInput.forEach((input) => {
-    //   if (!formData[input.inputID]) {
-    //     newError[input.inputID] = `${input.inputName} is required`;
-    //   }
-    //   else if (input.inputPattern && !input.inputPattern.test(formData[input.inputID])) {
-    //     newError[input.inputID] = `Invalid ${input.inputName}`;
-    //   }
-    // });
-
     if (!formData.aboutDescription) {
       newError.aboutDescription = "Description is required";
-    }
-    if (!formData.resume) {
-      newError.resume = "Resume Link is required";
-    }
-    if (!formData.userId) {
-      newError.userId = "User Id is required";
     }
 
     setErrors(newError);
@@ -99,32 +63,35 @@ const AboutChange = () => {
     const formError = validateForm();
 
     if (Object.keys(formError).length === 0) {
-      const dataToSend = {
-        description: formData.aboutDescription,
-        resume: formData.resume,
-        userId: formData.userId,
-      };
-      console.log("about change ===", dataToSend);
       if(editAbout){
         //For Updating data
+        const dataToEdit = {
+          description: formData.aboutDescription,
+          aboutId: aboutId,
+        };
+        console.log("about change ===", dataToEdit);
         axios
-        .put(`http://localhost:3000/about/${formData.userId}`, dataToSend)
+        .put(`http://localhost:3000/about/${aboutId}`, dataToEdit)
         .then((updateAbout) => {
           setSuccessMessage(
             "Congrulation! Your data has been updated successfully"
-          );
-          console.log("About is updated", updateAbout);
-        })
-        .catch((error) => {
-          setErrorMessage("Oops! Something went wrong");
-          console.log("Error occur", error);
-        });
-      }
-      else{
-
+            );
+            console.log("About is updated", updateAbout);
+          })
+          .catch((error) => {
+            setErrorMessage("Oops! Something went wrong");
+            console.log("Error occur", error);
+          });
+        }
+        else{
         //For storing data in backend
+        const dataToSend = {
+          description: formData.aboutDescription,
+          userId: userId,
+        };
+        console.log("about send ===", dataToSend);
         axios
-          .post("api", dataToSend)
+          .post("http://localhost:3000/about/new", dataToSend)
           .then((createAbout) => {
             setSuccessMessage(
               "Congrulation! Your data has been saved successfully"
@@ -139,8 +106,6 @@ const AboutChange = () => {
 
       setFormData({
         description: "",
-        resume: "",
-        userId: "",
       });
     } else {
       setErrorMessage("Please complete all input fields");
@@ -148,47 +113,40 @@ const AboutChange = () => {
   };
 
   //To get about data from Backend
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/abouts")
-  //     .then((response) => {
-  //      const userData = response.data;
-  //      const recieveData = userData.about;
-  //       setAboutText({
-  //         aboutDescription : recieveData.description,
-  //         resumeURL : recieveData.resume,
-  //         userId: recieveData._id;
-  //       });
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/about/get/65647756b1e006a5838a1952")
+      .then((response) => {
+       const userData = response.data;
+       const recieveData = userData.about;
+        setAboutData({
+          aboutDescription : recieveData.description,
+        });
+        const id= recieveData._id;
+        setAboutId(id);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleEditClick = (about) => {
     setEditAbout(about);
     setFormData({
       aboutDescription: about.aboutDescription,
-      resume: about.resumeURL,
-      userId: about._id,
     });
     setIsUpdateAbout(true);
   };
 
   //Delete About section
   const handleDeleteClick = (about) => {
-    const aboutDeleteId = about.userId;
     axios
-    .delete(`http://localhost:3000/about/${aboutDeleteId}`)
+    .delete(`http://localhost:3000/about/${aboutId}`)
     .then((updateAbout) => {
-      setSuccessMessage(
-        "Congrulation! Selected item has been deleted successfully"
-      );
       console.log("About is deleted", updateAbout);
     })
     .catch((error) => {
-      setErrorMessage("Oops! Something went wrong");
       console.log("Error occur", error);
     });
   }
@@ -204,50 +162,6 @@ const AboutChange = () => {
         <form className="py-10" onSubmit={handleSubmit}>
           <div>
           <Form formInput={formInput} errors={errors} formData={formData} handleInputChange={handleInputChange} />
-            {/* {formInput.map((data, index) => (
-              <div key={index}>
-                <label
-                  htmlFor={data.inputType}
-                  className="block mb-2 text-sm text-left font-medium text-gray-900 dark:text-white"
-                >
-                  {data.inputName}
-                </label>
-                {data.inputID === "description" ? (
-                  <textarea
-                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-5 ${
-                      errors[data.inputID] ? "border-red-500" : ""
-                    }`}
-                    rows={data.inputRow}
-                    cols={data.inputColumn}
-                    type={data.inputType}
-                    id={data.inputID}
-                    name={data.inputID}
-                    placeholder={data.inputPlaceholder}
-                    pattern={data.inputPattern}
-                    value={formData[data.inputID]}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <input
-                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-5 ${
-                      errors[data.inputID] ? "border-red-500" : ""
-                    }`}
-                    type={data.inputType}
-                    id={data.inputID}
-                    name={data.inputID}
-                    placeholder={data.inputPlaceholder}
-                    pattern={data.inputPattern}
-                    value={formData[data.inputID]}
-                    onChange={handleInputChange}
-                  />
-                )}
-                {errors[data.inputID] && (
-                  <p className="text-red-500 pb-5 text-sm">
-                    {errors[data.inputID]}
-                  </p>
-                )}
-              </div>
-            ))} */}
           </div>
           {successMessage && (
             <Alert
