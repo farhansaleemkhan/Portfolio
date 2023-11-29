@@ -3,41 +3,40 @@ import React, { useEffect, useState } from "react";
 import ImageBase64Converter from "../../Components/ImageBase64Converter";
 
 const Profile = () => {
-  // const [profileItem, setProfileItem] = useState({});
+  const [profileItem, setProfileItem] = useState({});
 
-  const profileItem = {
-    profileImage:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoqWIPKg9kRQhn9r3qgpcRSACAXvg-dbTOWQiDN6b5ahLRZ-AU_ioL_uXv5Un0kNGPNhE&usqp=CAU",
-    // "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
-    profileName: "Start Portfolio App",
-    profileEmail: "portfolio@gmail.com",
-    profilePhoneNo: "03333333111",
-    profileSkills: ["Graphic Artist", "Web Designer", "Illustrator"],
-    profileAddress: "Lahore Pakistan",
-  };
+  // const profileItem = {
+  //   profileImage:
+  //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoqWIPKg9kRQhn9r3qgpcRSACAXvg-dbTOWQiDN6b5ahLRZ-AU_ioL_uXv5Un0kNGPNhE&usqp=CAU",
+  //   // "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
+  //   profileName: "Start Portfolio App",
+  //   profileEmail: "portfolio@gmail.com",
+  //   profilePhoneNo: "03333333111",
+  //   profileSkills: ["Graphic Artist", "Web Designer", "Illustrator"],
+  //   profileAddress: "Lahore Pakistan",
+  // };
 
   // For Backend
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/user/")
-  //     .then((response) => {
-  //       console.log("Data", response.data)
-  //       const userData = response.data;
-  //       const recieveData = {
-  //         profileImage: userData.image,
-  //         profileName: userData.name,
-  //         profileEmail: userData.email,
-  //         profilePhoneNo: userData.phoneNumber,
-  //         profileSkills: userData.skills,
-  //         profileAddress: userData.address,
-  //       };
-  //       setProfileItem(recieveData);
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/user/65647756b1e006a5838a1952")
+      .then((response) => {
+        console.log("Data", response.data)
+        const userData = response.data;
+        const recieveData = {
+          profileImage: userData.image,
+          profileName: userData.name,
+          profileEmail: userData.email,
+          profilePhoneNo: userData.phoneNumber,
+          profileAddress: userData.address,
+       }
+        setProfileItem(recieveData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>

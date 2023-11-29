@@ -3,37 +3,37 @@ import React, { useEffect, useState } from "react";
 import Rating from "../../Components/Rating";
 
 const Skills = () => {
-  // const [userSkills , setUserSkills] = useState([])
+  const [userSkills , setUserSkills] = useState([])
 
-  const userSkills = [
-    { name: "HTML", rating: 5 },
-    { name: "React", rating: 4 },
-    { name: "Node", rating: 2 },
-  ];
+  // const userSkills = [
+  //   { name: "HTML", rating: 5 },
+  //   { name: "React", rating: 4 },
+  //   { name: "Node", rating: 2 },
+  // ];
 
   // For get data from Backend
-  // const fetchData = () => {
-  //   axios
-  //     .get("http://localhost:3000/skill/get/")
-  //     .then((response) => {
-  //       console.log("Data", response.data);
-  //       const userData = response.data;
-  //       const skillData = userData.skill;
-  //       const skills = userData.skills;
-  //       console.log("Skill Data Array ==", skills);
-  //       const recieveData = skills.map((item) => ({
-  //         name: item.name,
-  //         rating: item.rating,
-  //         skillId: item._id,
-  //       }));
-  //       console.log("Recieve Data ==", recieveData);
-  //       setUserSkills(recieveData);
-  //     })
-  //     .catch((error) => console.error("Error fetching data:", error));
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3000/skill/get/65647756b1e006a5838a1952")
+      .then((response) => {
+        // console.log("Data", response.data);
+        const userData = response.data;
+        const skillData = userData.skill;
+        const skills = skillData.skills;
+        // console.log("Skill Data Array ==", skills);
+        const recieveData = skills.map((item) => ({
+          name: item.name,
+          rating: item.rating,
+          skillId: item._id,
+        }));
+        console.log("Recieve Data ==", recieveData);
+        setUserSkills(recieveData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
