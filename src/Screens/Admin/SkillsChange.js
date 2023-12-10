@@ -18,7 +18,7 @@ const SkillsChange = () => {
   const [isNewSkill, setIsNewSkill] = useState(false);
   const [isUpdateSkill, setIsUpdateSkill] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [userSkills, setUserSkills] = useState([]);
+  // const [userSkills, setUserSkills] = useState([]);
 
   const closeSuccessMessage = () => {
     setSuccessMessage("");
@@ -30,6 +30,12 @@ const SkillsChange = () => {
   const handleRatingChange = (rating) => {
     setSkillRating(rating);
   };
+
+  const userSkills = [
+    { name: "HTML", rating: 5 },
+    { name: "React", rating: 4 },
+    { name: "Node", rating: 2 },
+  ];
 
   const validateForm = () => {
     const newError = {};
@@ -104,32 +110,32 @@ const SkillsChange = () => {
   };
 
   //Get Data from Backend
-  const fetchData = () => {
-    axios
-      .get("http://localhost:3000/skill/get/65647756b1e006a5838a1952")
-      .then((response) => {
-        // console.log("Data", response.data);
-        const userData = response.data;
-        const skillData = userData.skill;
+  // const fetchData = () => {
+  //   axios
+  //     .get("http://localhost:3000/skill/get/65647756b1e006a5838a1952")
+  //     .then((response) => {
+  //       // console.log("Data", response.data);
+  //       const userData = response.data;
+  //       const skillData = userData.skill;
 
-        const id = skillData._id;
-        setSkillData_id(id);
+  //       const id = skillData._id;
+  //       setSkillData_id(id);
 
-        const skills = skillData.skills;
-        // console.log("Skill Data Array ==", skills);
-        const recieveData = skills.map((item) => ({
-          name: item.name,
-          rating: item.rating,
-          skillId: item._id,
-        }));
-        console.log("Recieve Data ==", recieveData);
-        setUserSkills(recieveData);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  //       const skills = skillData.skills;
+  //       // console.log("Skill Data Array ==", skills);
+  //       const recieveData = skills.map((item) => ({
+  //         name: item.name,
+  //         rating: item.rating,
+  //         skillId: item._id,
+  //       }));
+  //       console.log("Recieve Data ==", recieveData);
+  //       setUserSkills(recieveData);
+  //     })
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   //Edit skill
   const handleEditClick = (index) => {
@@ -177,8 +183,8 @@ const SkillsChange = () => {
 
   return (
     <>
-      <div className="text-center p-5 md:ml-64">
-        <h1 className="text-5xl py-10 font-bold bg-cyan-500 text-white uppercase">
+      <div className="px-2 md:ml-64">
+        <h1 className="py-10 bg-cyan-500 uppercase text-center text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold">
           Skills
         </h1>
 
@@ -195,7 +201,7 @@ const SkillsChange = () => {
             <br />
             <button
               type="submit"
-              className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               onClick={() => {
                 setIsNewSkill(true);
                 setIsUpdateSkill(false);
@@ -208,7 +214,7 @@ const SkillsChange = () => {
             <br />
             <button
               type="submit"
-              className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               onClick={() => {
                 setIsUpdateSkill(true);
                 setIsNewSkill(false);
@@ -280,7 +286,7 @@ const SkillsChange = () => {
             )}
             <button
               type="submit"
-              className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Save
             </button>
@@ -288,33 +294,37 @@ const SkillsChange = () => {
         )}
 
         {isUpdateSkill && userSkills.length !== 0 && (
-          <div className="bg-slate-700 text-center py-20">
-            <p className="text-2xl text-white font-black">
+          <div className="bg-slate-700 text-center py-10 lg:py-20">
+            <p className="text-white font-black text-xl md:text-2xl lg:text-3xl pt-5">
               <i className="fa-solid fa-minus"></i>
               <i className="fa-solid fa-minus"></i>
               <i className="fa-solid fa-star"></i>
               <i className="fa-solid fa-minus"></i>
               <i className="fa-solid fa-minus"></i>
             </p>
-            <div className="text-white flex flex-col px-48 py-5">
+            <div className="text-white flex flex-col items-center lg:px-48 py-5">
               {userSkills &&
                 userSkills.map((skill, index) => (
-                  <div key={index} className="flex flex-row items-center">
-                    <p className="text-white text-3xl p-5">{skill.name}</p>
-                    <Rating value={skill.rating} />
-                    <br />
-                    <button
-                      className="text-white ml-10 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      onClick={() => handleEditClick(index)}
-                    >
-                      Edit <i className="fa-solid fa-pencil" />
-                    </button>
-                    <button
-                      className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      onClick={() => handleDeleteClick(index)}
-                    >
-                      Delete <i className="fa-solid fa-trash" />
-                    </button>
+                  <div>
+                    <div key={index} className="flex flex-row items-center">
+                      <p className="text-white font-medium md:font-semibold text-lg sm:text-xl md:text-2xl lg:text-3xl p-5">{skill.name}</p>
+                      <Rating value={skill.rating} />
+                      <br />
+                    </div>
+                    <div>
+                      <button
+                        className="text-white ml-10 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        onClick={() => handleEditClick(index)}
+                      >
+                        Edit <i className="fa-solid fa-pencil" />
+                      </button>
+                      <button
+                        className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        onClick={() => handleDeleteClick(index)}
+                      >
+                        Delete <i className="fa-solid fa-trash" />
+                      </button>
+                    </div>
                   </div>
                 ))}
             </div>

@@ -1,22 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 
 const SideBar = () => {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const openMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
   return (
     <div>
+      <div className="flex items-center bg-slate-700 pb-5 md:pb-0">
+          <button
+            type="button"
+            className="md:hidden fixed top-4 left-4 z-50 inline-flex items-center justify-center hover:bg-cyan-500 text-white rounded-lg focus:outline-white focus:ring-2 focus:ring-gray-200 dark:text-white"
+            onClick={openMenu}
+          >
+            <i className="fa-solid fa-bars"></i>
+          </button>
+        </div>
+
       <aside
-        id="default-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-        aria-label="Sidebar"
+        className={`fixed top-0 left-0 pt-0 md:pt-0 z-40 w-64 h-screen transition-transform ${
+          showMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-slate-700  dark:bg-gray-800">
-          <ul className="space-y-2 font-medium">
+        <div className="h-full px-1 md:px-3 py-4 overflow-y-auto bg-slate-700  dark:bg-gray-800">
+          <ul className="space-y-2">
             <li>
               <p
-                className="flex items-center p-2 text-white rounded-lg dark:text-white group uppercase text-2xl font-black"
+                className="flex items-center p-2 text-white rounded-lg dark:text-white group uppercase text-base sm:text-lg md:text-xl lg:text-2xl  font-bold"
               >
-                <span className="ml-3">My Portfolio</span>
+                <span className="lg:ml-3">My Portfolio</span>
               </p>
             </li>
             <li>

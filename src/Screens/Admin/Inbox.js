@@ -94,8 +94,8 @@ const Inbox = () => {
 
 
   return (
-    <div className="p-5 md:ml-64">
-      <h1 className="text-4xl py-8 font-bold bg-cyan-500 text-center text-white uppercase">
+    <div className="px-2 md:ml-64">
+      <h1 className="bg-cyan-500 text-center text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold py-10 uppercase">
         Messages
       </h1>
 

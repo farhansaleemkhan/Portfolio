@@ -151,18 +151,18 @@ const Contact = () => {
 
   return (
     <>
-      <div className="text-center py-8">
-        <a className="text-5xl font-bold uppercase" name="contact">
+      <div className="text-center py-10 lg:py-20">
+        <a className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase" name="contact">
           Contact Me
         </a>
-        <p className="text-2xl font-black py-5">
+        <p className="text-xl md:text-2xl lg:text-3xl font-black py-5">
           <i className="fa-solid fa-minus"></i>
           <i className="fa-solid fa-minus"></i>
           <i className="fa-solid fa-star"></i>
           <i className="fa-solid fa-minus"></i>
           <i className="fa-solid fa-minus"></i>
         </p>
-        <form className="flex flex-col px-20" onSubmit={handleSubmit}>
+        <form className="flex flex-col px-5 sm:px-10 md:px-15 lg:px-20" onSubmit={handleSubmit}>
           <Form
             formInput={formInput}
             errors={errors}

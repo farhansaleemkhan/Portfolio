@@ -154,13 +154,13 @@ const AboutChange = () => {
 
 
   return (
-    <div className="p-5 md:ml-64">
-      <h1 className="text-4xl py-8 font-bold bg-cyan-500 text-center text-white uppercase">
+    <div className="px-2 md:ml-64">
+      <h1 className="bg-slate-700 text-center text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold py-10 uppercase">
         About
       </h1>
       {(Object.keys(aboutData).length === 0 || isUpdateAbout) && (
-        <form className="py-10" onSubmit={handleSubmit}>
-          <div>
+        <form className="py-10 border border-black" onSubmit={handleSubmit}>
+          <div className="m-6">
           <Form formInput={formInput} errors={errors} formData={formData} handleInputChange={handleInputChange} />
           </div>
           {successMessage && (
@@ -179,28 +179,28 @@ const AboutChange = () => {
           )}
           <button
             type="submit"
-            className="text-white my-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Save
           </button>
         </form>
       )}
       {(!isUpdateAbout && Object.keys(aboutData).length !== 0 ) && (
-        <div className="bg-cyan-500 text-center py-10">
-          <div className="text-white flex flex-row px-80 py-5">
-            <p className="text-left">{aboutData.aboutDescription}</p>
+        <div className="bg-cyan-500 text-center py-5 lg:py-10">
+          <div className="text-white flex flex-row px-10 sm:px-40 md:px-60 lg:px-80  py-5">
+            <p className="text-left text-sm sm:text-lg">{aboutData.aboutDescription}</p>
           </div>
           
           <br />
           <br />
           <button
-            className="text-white mr-5 bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white mr-5 bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => handleEditClick(aboutData)}
           >
             Edit <i className="fa-solid fa-pencil" />
           </button>
           <button
-            className="text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => handleDeleteClick(aboutData)}
           >
             Delete <i className="fa-solid fa-trash" />

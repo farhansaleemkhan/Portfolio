@@ -271,8 +271,8 @@ const PortfolioChange = () => {
   };
 
   return (
-    <div className="p-5 md:ml-64">
-      <h1 className="text-4xl py-8 font-bold bg-cyan-500 text-center text-white uppercase">
+    <div className="lg:px-2 md:ml-64">
+      <h1 className="bg-cyan-500 text-white uppercase text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold py-10">
         Project
       </h1>
 
@@ -286,7 +286,7 @@ const PortfolioChange = () => {
           <br />
           <button
             type="submit"
-            className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => {
               setIsNewProject(true);
               setIsUpdateProject(false);
@@ -299,7 +299,7 @@ const PortfolioChange = () => {
           <br />
           <button
             type="submit"
-            className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => {
               setIsUpdateProject(true);
               setIsNewProject(false);
@@ -313,7 +313,7 @@ const PortfolioChange = () => {
 
       {(isNewProject || portfolioData.length === 0) && (
         <form className="py-10 border border-black" onSubmit={handleSubmit}>
-          <div className="grid gap-6 m-6 md:grid-cols-2">
+          <div className="m-6">
             <Form
               formInput={formInput}
               errors={errors}
@@ -364,14 +364,14 @@ const PortfolioChange = () => {
           )}
           <button
             type="submit"
-            className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Save
           </button>
         </form>
       )}
       {isUpdateProject && portfolioData.length !== 0 && (
-        <div className="grid grid-cols-3 grid-rows-2 my-10 gap-24">
+        <div className="my-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 py-10 gap-28">
           {portfolioData.map((data, index) => (
             <div className="items-center h-48 w-64 my-10 rounded" key={index}>
               <div className="align-center justify-center">
@@ -382,23 +382,23 @@ const PortfolioChange = () => {
                 />
               </div>
               <div className="bg-slate-700 pl-1 rounded text-white py-5">
-                <p className="font-semibold">
+                <p className="font-medium md:font-semibold">
                   Project Name: {data.projectName}
                 </p>
-                <p className="">
+                <p className="font-normal md:font-medium">
                   Project Description: {data.projectDescription}
                 </p>
-                <p className="">Start Date: {data.projectStartDate}</p>
-                <p className="">End Date: {data.projectEndDate}</p>
-                <p className="">Technology: {data.projectLanguage}</p>
+                <p className="font-normal md:font-medium">Start Date: {data.projectStartDate}</p>
+                <p className="font-normal md:font-medium">End Date: {data.projectEndDate}</p>
+                <p className="font-normal md:font-medium">Technology: {data.projectLanguage}</p>
                 <button
-                  className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => handleEditClick(index)}
                 >
                   Edit <i className="fa-solid fa-pencil" />
                 </button>
                 <button
-                  className="text-white bg-cyan-500 ml-3 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="text-white bg-cyan-500 ml-3 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => handleDeleteClick(index)}
                 >
                   Delete <i className="fa-solid fa-trash" />

@@ -19,6 +19,15 @@ const ProfileUpdate = () => {
     setErrorMessage("");
   };
 
+  // const profileItem = {
+  //   profileImage:
+  //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoqWIPKg9kRQhn9r3qgpcRSACAXvg-dbTOWQiDN6b5ahLRZ-AU_ioL_uXv5Un0kNGPNhE&usqp=CAU",
+  //   // "https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg",
+  //   profileName: "Start Portfolio App",
+  //   profileEmail: "portfolio@gmail.com",
+  //   profilePhoneNo: "03333333111",
+  //   profileAddress: "Lahore Pakistan",
+  // };
 
   const formInput = [
     {
@@ -178,28 +187,28 @@ const ProfileUpdate = () => {
   };
 
   // For getting data from Backend
-  const fetchData = () => {
-    axios
-      .get("http://localhost:3000/user/65647756b1e006a5838a1952")
-      .then((response) => {
-        console.log("Data", response.data)
-        const userData = response.data;
-        const recieveData = {
-          profileImage: userData.image,
-          profileName: userData.name,
-          profileEmail: userData.email,
-          profilePhoneNo: userData.phoneNumber,
-          profileAddress: userData.address,
-          userId: userData._id,
-        };
-        console.log("Recieve Data ==",recieveData);
-        setProfileItem(recieveData);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // const fetchData = () => {
+  //   axios
+  //     .get("http://localhost:3000/user/65647756b1e006a5838a1952")
+  //     .then((response) => {
+  //       console.log("Data", response.data)
+  //       const userData = response.data;
+  //       const recieveData = {
+  //         profileImage: userData.image,
+  //         profileName: userData.name,
+  //         profileEmail: userData.email,
+  //         profilePhoneNo: userData.phoneNumber,
+  //         profileAddress: userData.address,
+  //         userId: userData._id,
+  //       };
+  //       console.log("Recieve Data ==",recieveData);
+  //       setProfileItem(recieveData);
+  //     })
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const handleEditClick = (profile) => {
     setEditProfile(profile);
@@ -217,51 +226,41 @@ const ProfileUpdate = () => {
   };
 
   return (
-    <div className="text-center p-5 md:ml-64">
-      <h1 className="text-5xl py-10 font-bold bg-slate-700 text-white uppercase">
+    <div className="px-2 md:ml-64">
+      <h1 className="bg-slate-700 text-white text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold py-10 uppercase">
         Profile
       </h1>
 
       {!isUpdateProfile && Object.keys(profileItem).length !== 0 && (
         <>
-          <div className="bg-cyan-500 items-center py-24 flex flex-col">
+          <div className="bg-cyan-500 items-center flex flex-col py-44 md:py-24">
             <img
               src={profileItem.profileImage}
               alt={profileItem.profileName}
-              className="h-72 w-96"
+              className="h-48 w-56 sm:h-56 sm:w-64 md:h-72 md:w-80 m-3 rounded-full"
             />
-            <p className="text-white text-2xl py-5 font-black">
+            <p className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black py-5">
               <i className="fa-solid fa-minus"></i>
               <i className="fa-solid fa-minus"></i>
               <i className="fa-solid fa-star"></i>
               <i className="fa-solid fa-minus"></i>
               <i className="fa-solid fa-minus"></i>
             </p>
-            <p className="text-white text-5xl font-bold py-10 uppercase">
+            <p className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold py-10 uppercase">
               {profileItem.profileName}
             </p>
-            <p className="text-white font-bold text-2xl pb-5 lowercase">
+            <p className="lowercase text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl pb-3">
               {profileItem.profileEmail}
             </p>
-            <p className="text-white font-bold text-2xl lowercase">
+            <p className="lowercase text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl pb-3">
               {profileItem.profilePhoneNo}
             </p>
-            <div className="flex">
-              {profileItem.profileSkills &&
-                profileItem.profileSkills.map((skill, index) => (
-                  <p key={index} className="text-white text-3xl">
-                    {skill}
-                    {/* -&nbsp; */}
-                    {index < profileItem.profileSkills.length - 1 && " - "}
-                  </p>
-                ))}
-            </div>
-            <p className="text-white font-bold text-2xl">
+            <p className="text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl pb-3">
               {profileItem.profileAddress}
             </p>
           </div>
           <button
-            className="text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => handleEditClick(profileItem)}
           >
             Edit <i className="fa-solid fa-pencil" />
@@ -270,7 +269,7 @@ const ProfileUpdate = () => {
       )}
       {(Object.keys(profileItem).length === 0 || isUpdateProfile) && (
         <form className="py-10 border border-black" onSubmit={handleSubmit}>
-          <div className="grid gap-6 m-6 md:grid-cols-2">
+          <div className="m-6">
             <Form
               formInput={formInput}
               errors={errors}
@@ -294,7 +293,7 @@ const ProfileUpdate = () => {
           )}
           <button
             type="submit"
-            className="text-white text-left bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white ml-5 bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Save
           </button>
